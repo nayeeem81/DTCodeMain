@@ -3,7 +3,6 @@
     <File Path=".editorconfig" />
   </Folder>
   <Project Path="Main.Common/Main.Common.csproj" Id="9ec1bd43-fe89-42bc-b5eb-2cc7212b86ce" />
-  <Project Path="Main.Infrastructure/Main.Infrastructure.csproj" Id="114c896d-ddd2-4abe-8065-ae3286c5fa94" />
   <Project Path="Main.Model/Main.Model.csproj" Id="c366b620-f6f5-44ea-8d8d-6c2b55a106ec" />
   <Project Path="Main.WebAppCore/Main.WebAppCore.csproj">
     <BuildDependency Project="Main.Common/Main.Common.csproj" />
