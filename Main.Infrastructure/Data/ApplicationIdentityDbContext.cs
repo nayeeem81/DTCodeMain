@@ -5,6 +5,6 @@ using Microsoft.EntityFrameworkCore;
 namespace Data;
 
 public class ApplicationIdentityDbContext ( DbContextOptions options )
-    : IdentityDbContext ( options )
+    : IdentityDbContext ( options )  
 {
 }
