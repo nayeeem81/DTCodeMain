@@ -9,7 +9,7 @@ public interface IDatabaseSeeder
 }
 
 public class DatabaseSeeder (
-    ApplicationIdentityDbContext identityDbContext,
+    ApplicationDbContext identityDbContext,
     UserManager<IdentityUser> userManager,
     RoleManager<IdentityRole> roleManager ): IDatabaseSeeder
 {
@@ -24,7 +24,6 @@ public class DatabaseSeeder (
             }
         }
 
-        // 3. Admin User Seeding
         var adminEmail = "admin@company.com";
         var adminUser = await userManager.FindByEmailAsync(adminEmail);
         if ( adminUser == null )
@@ -38,7 +37,6 @@ public class DatabaseSeeder (
         }
 
 
-        // 3. Company User Seeding
         var companyEmail = "finearts@company.com";
         var companyUser = await userManager.FindByEmailAsync(companyEmail);
         if ( companyUser == null )

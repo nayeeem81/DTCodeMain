@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data;
 
-public class ApplicationIdentityDbContext ( DbContextOptions options )
+public class ApplicationDbContext ( DbContextOptions options )
     : IdentityDbContext ( options )  
 {
+
 }
