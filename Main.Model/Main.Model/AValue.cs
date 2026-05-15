@@ -5,12 +5,10 @@ namespace Main.Model
 {
     public class AValue : BaseEntity
     {
-
         public AValue()
         {
         }
 
-        
         public AValue(EnumCountry country, string text, EnumAllowedVariable variable)
         {
             if(string.IsNullOrEmpty(text))
@@ -18,7 +16,6 @@ namespace Main.Model
             Text = text;
             Variable = variable;
         }
-
 
         [Key]
         public long ValueID { get; set; }

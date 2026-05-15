@@ -1,13 +1,28 @@
 ﻿
 # .Net 8.0 
 
+# Infrastructure:
+
+Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 8.0.0
+Install-Package Microsoft.EntityFrameworkCore.Tools -Version 8.0.0
+Install-Package Microsoft.AspNetCore.Identity.EntityFrameworkCore -Version 8.0.0
+
+
+Install-Package Microsoft.Extensions.Identity.Core
+
+
+
 # Entity Framework (Model)
 # Nuget Packages:
 
-Install-Package Microsoft.AspNetCore.Identity.EntityFrameworkCore -Version 8.0.0
 Install-Package Microsoft.EntityFrameworkCore.Design -Version 8.0.0
-Install-Package Microsoft.EntityFrameworkCore.Tools -Version 8.0.0
-Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 8.0.0
+
+
+
+Install-Package Microsoft.Extensions.Configuration.Json -Version 8.0.0
+Install-Package Microsoft.Extensions.Configuration.EnvironmentVariables -Version 8.0.0
+
+
 
 
 # Program.cs

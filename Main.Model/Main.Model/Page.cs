@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Main.Common;
 
-namespace Main.Model 
+namespace Main.Model
 { 
     public class Page : BaseEntity
     {

@@ -6,7 +6,7 @@ namespace Main.Model
     public class ProductComment : BaseEntity
     {
         public ProductComment() { }
-          
+
 
         [Key] 
         public int ProductCommentID { get; set; }

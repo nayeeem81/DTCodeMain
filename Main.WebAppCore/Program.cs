@@ -1,27 +1,17 @@
-using Main.Model;
-using Main.WebAppCore;
+//using Main.Infrastructure;
 
-var builder = WebApplication.CreateBuilder(args);
+    var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddGlobalExceptionHandeler ( );
+    //builder.Services.AddControllersWithViews ( );
 
-builder.Services.AddIdentityDbContext ( builder.Configuration );
+    //builder.Services.AddInfrastructureServices ( builder.Configuration );
 
-builder.Services.AddWebBussiessDbContext ( builder.Configuration );
+    var app = builder.Build();
 
+    app.UseExceptionHandler ( );
 
+    app.UseStatusCodePages ( );
 
+    app.MapControllers ( );
 
-
-
-var app = builder.Build();
-
-app.UseExceptionHandler ( );
-
-app.UseStatusCodePages ( );
-
-
-app.MapControllers ( );
-
-
-app.Run();
+    app.Run();

@@ -1,8 +1,7 @@
-﻿using Main.Common;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Main.Model 
+namespace Main.Model
 { 
     public class PageContent : BaseEntity
     {
