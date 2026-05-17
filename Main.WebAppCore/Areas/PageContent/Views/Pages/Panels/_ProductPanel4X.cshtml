@@ -1,0 +1,90 @@
+﻿@using System.Linq;
+@using System.Collections.Generic;
+@using Common
+@model PagePanelViewModel
+
+@{
+    string hide = "";
+
+    List<PanelPostViewModel> list = new List<PanelPostViewModel>();
+
+    if ( Model.ListPanelPosts == null || Model.ListPanelPosts.Count == 0)
+    {
+        hide = "hide";
+    }
+    else
+    {
+        if ( Model.ListPanelPosts.Count < 4)
+        {
+            hide = "hide";
+        }
+        else
+        {
+            list = Model.ListPanelPosts.Take<PanelPostViewModel> ( 4 ).ToList();
+        }
+    }
+}
+
+<div class="container @hide">
+
+    <h4 class="sub-title">
+
+        @Model.PanelTitle
+
+    </h4>
+
+    <div class="row">
+
+        @{
+            foreach ( var product in list.ToList())
+            {
+                <div class="col-md-3 col-sm-3 col-lg-3 col-xs-3 card-form">
+                           
+                    <a class="thumbnail only-image">
+
+                        @if ( product.ImageFileContent != null )
+                        {
+
+                            @await Html.PartialAsync( "~/Areas/PageContent/Views/Pages/Images/_Image4X.cshtml", product.ImageFileContent )
+                                
+                        }
+                        else
+                        {
+
+                            @await Html.PartialAsync( "~/Areas/PageContent/Views/Pages/Images/_Image4X.cshtml", new byte[1] )
+                                    
+                        }
+
+                    </a>
+
+
+                    <div class="caption" style="margin-bottom:10px;">
+
+                            <div class="truncate text-bg-success">
+
+                                @product.PostTitle
+                                    
+                            </div>
+
+                            <div class="fa-dollar text-info-emphasis">
+
+                                @product.Price Taka
+                                    
+                            </div>
+                                    
+                            <div class="add-to-cart sub-content text-center" data-id="@product.RootID">
+                                        
+                                <button role="link" class="primary-button max"> ADD TO CART </button>
+
+                            </div>
+                                    
+                            
+                    </div>
+                
+                </div>
+            }
+        }
+
+    </div>
+
+</div>

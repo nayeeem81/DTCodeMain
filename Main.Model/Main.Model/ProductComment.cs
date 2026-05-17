@@ -1,22 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Main.Model
+namespace Entity.Model;
+
+public class ProductComment : BaseEntity
 {
-    public class ProductComment : BaseEntity
-    {
-        public ProductComment() { }
+    public ProductComment() { }
 
+    [Key] 
+    public int ProductCommentID { get; set; }
 
-        [Key] 
-        public int ProductCommentID { get; set; }
+    [Required]
+    public string Comment { get; set; }
 
-        [Required]
-        public string Comment { get; set; }
+    public int ProductID { get; set; }
 
-        public int ProductID { get; set; }
-
-        [ForeignKey("ProductID")]
-        public virtual Product Product { get; set; }
-    }
+    [ForeignKey("ProductID")]
+    public virtual Product Product { get; set; }
 }

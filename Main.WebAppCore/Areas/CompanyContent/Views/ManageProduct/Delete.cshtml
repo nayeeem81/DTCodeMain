@@ -1,0 +1,29 @@
+﻿@using FineArtsWebApp;
+@model ProductViewModel
+
+@{
+    ViewBag.Title = "Delete Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.ExcludeHeader = true;
+}
+
+
+<div class="container">
+
+    <div class="card-form">
+
+        <h4 class="card-title">Are you sure, you want to delete this?</h4>
+
+        <div class="gap"></div>
+        <div class="gap"></div>
+
+   
+
+        <div class="form-actions">
+            <a href="@Url.Action("DeleteProduct", "ManageProduct", new { Area = "CompanyContent", id = Model.ProductID, fakeId = 1 })" class="btn btn-primary btn-sm btn-success">DELETE</a> &nbsp;|&nbsp;
+                
+            <a href="@Url.Action("Index", "ManageProduct", new { Area = "CompanyContent" })" class="btn btn-primary btn-sm btn-success">BACK TO LIST</a>
+        </div>
+
+    </div>
+</div>

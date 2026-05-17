@@ -1,0 +1,91 @@
+﻿@using FineArtsWebApp;
+@model AdminPostViewModel
+@using Microsoft.AspNetCore.Mvc.Localization;
+@using Microsoft.Extensions.Localization;
+@inject IStringLocalizer<SharedResource> SharedLocalizer
+
+<div id="detailsAdminPostContainerPartial" class="card-form row">
+
+    <h4 class="card-title">ADMIN POST INFORMATON</h4>
+
+    <div class="gap"></div>
+    <div class="gap"></div>
+
+    <h4 class="card-subtitle">Post Information</h4>
+
+    <div class="gap"></div>
+ 
+  
+    <div class="input-field col-md-4 col-sm-4 col-lg-4 col-xs-12">
+        @Html.LabelFor(a => a.EnumAdminPostTypeDescription)
+        @Html.DisplayFor(a => a.EnumAdminPostTypeDescription, new { @class = "fff" })
+    </div>
+
+        
+    <div class="input-field col-md-4 col-sm-4 col-lg-4 col-xs-12">
+        @Html.LabelFor(a => a.PosterName)
+        @Html.DisplayFor(a => a.PosterName, new { htmlAttributes = new { @class = "fff" } })
+    </div>
+
+
+    <div class="input-field col-md-4 col-sm-4 col-lg-4 col-xs-12">
+        @Html.LabelFor(a => a.PostTitle)
+        @Html.DisplayFor(a => a.PostTitle, new { htmlAttributes = new { @class = "fff" } })
+    </div>
+
+
+    <div class="input-field col-md-4 col-sm-4 col-lg-4 col-xs-12">
+        @Html.LabelFor(a => a.WebsiteUrl)
+        @Html.DisplayFor(a => a.WebsiteUrl, new { htmlAttributes = new { @class = "fff" } })
+    </div>
+
+
+    <div class="input-field col-md-4 col-sm-4 col-lg-4 col-xs-12">
+        @Html.LabelFor(a => a.ShortNote)
+        @Html.DisplayFor(a => a.ShortNote, new { htmlAttributes = new { @class = "fff" } })
+    </div>
+
+
+    <div class="input-field col-md-4 col-sm-4 col-lg-4 col-xs-12">
+        @Html.LabelFor(a => a.SearchTag)
+        @Html.DisplayFor(a => a.SearchTag, new { htmlAttributes = new { @class = "fff" } })
+    </div>
+    
+    <h4 class="card-subtitle">Post Pictures</h4>
+
+    <div class="gap"></div>
+
+   
+    <div class="image-field col-md-12 col-xs-12 col-sm-12 col-lg-12" id="imageEditPanelContainer">
+        @{ 
+            foreach(var item in Model.ListAdminPostFileImages.ToList())
+            {
+                @await Html.PartialAsync("~/Areas/AdminContent/Views/ManageAdminPost/_ViewImage.cshtml", item)
+            }
+        }
+    </div>
+
+    <div class="gap"></div>
+
+    <div data-label="Action" class="image-field col-md-12 col-xs-12 col-sm-12 col-lg-12">
+        <a title="List Admin Content"
+                class="icon-button btn-lg flex link-dark"
+                href="@Url.Action("Index", "ManageAdminPost", new { Area = "AdminContent" })">
+            <i class="fa fa-list"></i>
+            <span class="action-text">List</span>
+        </a>
+        <a title="Edit Admin Content"
+            class="icon-button btn-lg flex link-dark"
+                href="@Url.Action("Edit", "ManageAdminPost", new { Area = "AdminContent", id = Model.AdminPostID })">
+            <i class="fa fa-edit"></i>
+            <span class="action-text">Edit</span>
+        </a>
+        <a title="Remove Admin Content"
+            class="icon-button btn-lg flex link-dark"
+                href="@Url.Action("Delete", "ManageAdminPost", new { Area = "AdminContent", id = Model.AdminPostID })">
+            <i class="fa fa-trash"></i>
+            <span class="action-text">Delete</span>
+        </a>
+    </div>
+
+</div>

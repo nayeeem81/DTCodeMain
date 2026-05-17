@@ -1,0 +1,18 @@
+﻿@model AdminPostViewModel
+@inject IStringLocalizer<SharedResource> SharedLocalizer
+
+@{
+    ViewBag.Title = SharedLocalizer["ViewBagTitleEditPost"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.ExcludeHeader = true;
+}
+
+<div id="detailsAdminPostMainView" class="container">
+    @await Html.PartialAsync("~/Areas/AdminContent/Views/ManageAdminPost/_DietailsAdminContent.cshtml", Model)
+</div>
+
+@section scriptsapp {
+    <script>
+        PAGE_NAME = '@Model.PageName';
+    </script>
+}

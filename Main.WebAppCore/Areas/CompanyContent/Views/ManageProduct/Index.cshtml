@@ -1,0 +1,98 @@
+﻿@using FineArtsWebApp;
+@model ManageProductViewModel
+@using Microsoft.AspNetCore.Mvc.Localization;
+@using Microsoft.Extensions.Localization;
+@inject IStringLocalizer<SharedResource> SharedLocalizer
+
+@{
+    ViewData["Title"] = "Manage Products";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.ExcludeHeader = true;
+    var taka = " Taka";
+}
+
+<div id="manageProductDesktop" class="container">
+
+    <div class="card-form">
+
+        <h4 class="card-title">MANAGE PRODUCTS</h4>
+       
+
+    <div class="gap"></div>
+    <div class="gap"></div>
+
+    <table class="table">
+
+        <thead>
+
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ListProduct[0].CategoryID)
+                </th>                    
+                <th>
+                    @Html.DisplayNameFor(model => model.ListProduct[0].SubCategoryID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ListProduct[0].ProductName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ListProduct[0].UnitPrice)
+                </th>
+           
+                <th></th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @{
+                foreach (var item in Model.ListProduct.ToList()) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CategoryText)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SubCategoryText)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UnitPrice) @taka
+                    </td>
+           
+                    <td data-label="Action">
+
+                        <a title="View Admin Content"
+                                class="icon-button flex"
+                                href="@Url.Action("Details", "ManageProduct", new { id = item.ProductID })">
+                            <i class="fa fa-eye"></i>
+                        </a>
+                        <a title="Edit Admin Content"
+                                class="icon-button flex"
+                                href="@Url.Action("Edit", "ManageProduct", new { id = item.ProductID })">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a title="Remove Admin Content"
+                                class="icon-button flex"
+                                href="@Url.Action("Delete", "ManageProduct", new { id = item.ProductID })">
+                            <i class="fa fa-trash"></i>
+                        </a>
+
+                    </td>
+                </tr>
+                }
+           }
+
+        </tbody>
+
+    </table>
+ </div>
+</div>
+
+@section scriptsapp {
+    <script type="text/javascript">
+        PAGE_NAME = '@Model.PageName';
+    </script>
+}

@@ -1,0 +1,162 @@
+﻿@model AdminPostViewModel
+@inject IStringLocalizer<SharedResource> SharedLocalizer
+
+@{
+    ViewBag.Title = SharedLocalizer["ViewBagTitleNewPost"];
+    Layout = "~/Views/Shared/_Layout.Mobile.cshtml";
+    ViewBag.ExcludeHeader = true;
+}
+
+<div id="newAdminPostMainView" class="container">
+    @await Html.PartialAsync("~/Areas/AdminContent/Views/ManageAdminPost/_NewAdminContent.cshtml", Model)
+</div>
+
+@section scriptsapp {
+
+    @await Html.PartialAsync("~/Views/Shared/_ValidationScriptsPartial.cshtml")
+
+    <script>
+
+        PAGE_NAME = '@Model.PageName';
+
+        var imageLoadURL = '@Url.Action("ImageLoad", "ManageAdminPost")';
+        var imageUploadURL = '@Url.Action("ImageUpload", "ManageAdminPost")';
+        var removeImageShortContentURL = '@Url.Action("ImageRemove", "ManageAdminPost")?id
+
+        var notify = $.notify;
+
+        function LoadImageNewAdminContent() {
+            $.ajax({
+                type: "GET",
+                url: imageLoadURL,
+                cache: false,
+                async: true,
+                success: function (result) {
+
+                    $("#imagePanelContainer").append(result);
+
+                    notify({
+                        type: 'success',
+                        message: '<strong><i class="fa fa-thumbs-up"></i>&nbsp;' + SUCCESS + '</strong> ' + IMAGE_LOAD_SUCCESSFUL,
+                        allow_dismiss: true,
+                        placement: {
+                            from: "top",
+                            align: "right"
+                        },
+                        delay: { show: 10, hide: 10 },
+                        template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                            '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                            '<span data-notify="icon"></span>' +
+                            '<span data-notify="title">{1}</span>' +
+                            '<span data-notify="message">{2}</span>' +
+                            '</div>'
+                    });
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+
+        $(document).ready(function () {
+
+            $('#btnUpload').click(function () {
+
+                var fileElement = $('#fileInput')[0];
+                var files = fileElement.files;
+
+
+                if (files.length === 0) {
+                    return;
+                }
+                
+                var formData = new FormData();
+                
+                formData.append("file", files[0]);
+
+                $.ajax({
+                    url: imageUploadURL,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        LoadImageNewAdminContent();
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+
+
+            document.getElementById("myMainForm").addEventListener("submit", function (e) {
+           
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                    
+                var that = $(this);
+    
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    }
+                })
+                .then(response => {
+            
+                    return response.json().then(data => {
+              
+                              console.log("Status Code:", response.status);
+                              console.log("JSON Data:", data);
+      
+                              if (response.status === 200)
+                              {
+                                    window.location.href = data.urlGo;
+                              }
+                              else if (response.status === 400)
+                              {
+                                    if(data.success === false)
+                                    {
+                                        console.log(data.errors);
+                                        console.log(data.message);
+                                        return;
+                                    }
+                                    return;
+                              }
+
+                        });
+                })
+                .catch(error => {
+                    console.error("Network or parsing error:", error);
+                });
+            });
+
+
+            $(document).on("click", ".btn-remove-image", function () {
+                var that = this;
+                var id = $(that).data("id");
+                var rem = $(that).closest(".image-content");
+                $(rem).remove();
+
+                $.ajax({
+                    url: removeImageShortContentURL + id,
+                    type: 'DELETE',
+                    dataType: 'json',
+                    processData: false,
+                    cache: false,
+                    async: true,
+                    success: function (response) {
+                        console.log(response);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+    </script>
+}

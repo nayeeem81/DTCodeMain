@@ -1,0 +1,62 @@
+﻿@model InformationViewModel
+@inject IStringLocalizer<SharedResource> SharedLocalizer
+
+@{
+    ViewData["Title"] = "Manage Page Contents";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.ExcludeHeader = true;
+}
+
+<div id="pageListContainer" class="container">
+    
+    <div class="gap"></div>
+
+    <h4 class="card-title">MANAGE PAGE CONTENTS</h4>
+
+    <div class="gap"></div>
+    <div class="gap"></div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CompanyLabel)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.PageLabel)
+                </th>
+                 <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AddPanelButtons)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.ViewEditButtons)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ListPages.ToList()) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PageName)
+                    </td>
+                    <td></td>
+                    <td>
+                        <a href="@Url.Action("NewProductPanel", "Pages", new { Area = "PageContent", id = item.PageID })" role="link" class="btn action-button">Add Product</a> |
+                        <a role="button" class="action-button" asp-action="Edit" asp-route-id="@item.PageID">Advertisement</a>
+                    </td>
+                    <td>
+                        <a role="button" class="action-button" asp-action="Edit" asp-route-id="@item.PageID">Edit</a> |
+                        <a href="@Url.Action("PreviewPageContent", "Pages", new { Area = "PageContent", id = item.PageID })" role="link" class="btn action-button">View Page</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

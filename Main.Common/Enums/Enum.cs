@@ -1,6 +1,13 @@
 ﻿using System.ComponentModel;
 
-namespace Main.Common;
+namespace Main.Common.Enums;
+
+public enum EnumAccountType
+{
+    Vendor = 1,
+    Company = 2,
+    User = 3
+}
 
 public enum EnumCategoryFor
 {

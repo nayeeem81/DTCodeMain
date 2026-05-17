@@ -1,4 +1,5 @@
 ﻿using Main.Common;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebApp.ViewModel;
@@ -12,15 +13,9 @@ public class AdminPostViewModel : BaseViewModel
 
     public int AdminPostID { get; set; }
 
-    
-    [Display(Name = "Poster Name")]
-    [Required(ErrorMessage = "Poster name is required!")]
     public string PosterName { get; set; }
 
     
-    
-    [Display(Name = "Post Title")]
-    [Required(ErrorMessage = "Post Title is required!")]
     public string PostTitle { get; set; }
 
 
@@ -51,9 +46,6 @@ public class AdminPostViewModel : BaseViewModel
     public int UserID { get; set; }
 
 
-    
-    [Display(Name = "Post Types")]
-    [Required(ErrorMessage = "Post Type is required!")]
     public int PostTypeID { get; set; }
 
     public IEnumerable<SelectListItem> AV_PostType { get; set; }

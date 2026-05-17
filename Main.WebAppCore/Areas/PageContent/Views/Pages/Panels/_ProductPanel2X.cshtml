@@ -1,0 +1,82 @@
+﻿@using System.Linq;
+@using System.Collections.Generic;
+@using Common
+@model PagePanelViewModel
+
+@{
+    string hide = "";
+
+    List<PanelPostViewModel> list = new List<PanelPostViewModel>();
+
+    if ( Model.ListPanelPosts == null || Model.ListPanelPosts.Count == 0)
+    {
+        hide = "hide";
+    }
+    else
+    {
+        if ( Model.ListPanelPosts.Count < 2)
+        {
+            hide = "hide";
+        }
+        else
+        {
+            list = Model.ListPanelPosts.Take<PanelPostViewModel> ( 2 ).ToList();
+        }
+    }
+}
+
+<div class="container @hide">
+
+    <h4 class="sub-title">
+
+        @Model.PanelTitle
+
+    </h4>
+  
+    <div class="row">
+
+        @{
+            foreach ( var product in list.ToList())
+            {
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xs-6 card">
+                           
+                    <a class="thumbnail only-image">
+
+                        @if ( product.ImageFileContent != null )
+                        {
+
+                            @await Html.PartialAsync( "~/Areas/PageContent/Views/Pages/Images/_Image2X.cshtml", product.ImageFileContent )
+                                
+                        }
+                        else
+                        {
+
+                            @await Html.PartialAsync( "~/Areas/PageContent/Views/Pages/Images/_Image2X.cshtml", new byte[1] )
+                                    
+                        }
+
+                    </a>
+
+
+                    <div class="caption card-body" style="margin-bottom:10px;">
+
+                        <h5 class="truncate text-bg-success card-title" style="text-align:center;">
+                            @product.PostTitle
+                        </h5>
+
+                        <p class="fa-dollar text-info-emphasis card-text" style="text-align:center;">
+                            @product.Price Taka
+                        </p>
+
+                        <a type="button" class="btn btn-primary max" data-id="@product.RootID" style="text-align:center;">
+                            <span style="vertical-align:middle;"><i class="fa fa-plus fa-fw"></i>ADD TO CART</span>
+                        </a>
+                    </div>
+                
+                </div>
+            }
+        }
+
+    </div>
+
+</div>

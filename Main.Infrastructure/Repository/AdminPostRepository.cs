@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Main.Model;
-using IRepository;
+﻿using BusinessModel;
 using Data;
+using Entity.Model;
+using IRepository;
+using Main.Common.Enums;
+using Microsoft.EntityFrameworkCore;               
 
 namespace Repository;
 
@@ -20,14 +22,35 @@ public class AdminPostRepository : IAdminPostRepository
         return result > 0;
     }
 
-    public async Task<List<AdminPost>> GetAllAdminContentPosts()
+    public async Task<List<AdminPostDataModel>> GetAllAdminContentPosts()
     {
-        return await _Context.AdminPosts.ToListAsync();
+        List<AdminPostDataModel> listPostDataModel  = new List<BusinessModel.AdminPostDataModel>();
+
+        var listPostEntity = await _Context.AdminPosts.ToListAsync();
+
+        AdminPostDataModel objDataModel;
+
+        listPostEntity.ForEach ( postEntity =>
+        {
+            objDataModel = new BusinessModel.AdminPostDataModel();
+
+            objDataModel.AdminPostID = postEntity.AdminPostID;
+            objDataModel.PosterName = postEntity.PosterName;
+            objDataModel.HostCompanyName = postEntity.HostCompanyName;
+
+            objDataModel.PostTitle = postEntity.Title;
+            objDataModel.PostTypeID =  (int) postEntity.PostType;
+
+            listPostDataModel.Add( objDataModel );
+
+        } );
+
+        return listPostDataModel;
     }
 
     public async Task<bool> DeleteAdminPost(int postId)
     {
-        var post = _Context.AdminPosts.ToList().Single<AdminPost>(a => a.AdminPostID == postId);
+        var post = _Context.AdminPosts.ToList().Single(a => a.AdminPostID == postId);
 
         if (post != null)
         {
@@ -51,23 +74,68 @@ public class AdminPostRepository : IAdminPostRepository
         return result > 0;
     }
 
-    public async Task<AdminPost> GetAdminPostByPostID(int postId)
+    public async Task<Entity.Model.AdminPost> GetAdminPostByPostID(int postId)
     {
-        var post = await _Context.AdminPosts.SingleAsync<AdminPost>(a => a.AdminPostID == postId);
+        var post = await _Context.AdminPosts.SingleAsync(a => a.AdminPostID == postId);
         return post;
     }
 
-    public async Task<bool> SaveNewAdminPost(AdminPost postObject, List<AdminImageFile> objListFiles)
+    public async Task<bool> SaveNewAdminPost(AdminPostDataModel postObject, List<AdminImageFileDataModel> objListFiles)
     {
-        if(postObject != null)
-        {
-            postObject.ListAdminImageFiles = objListFiles;
-            postObject.ListAdminPostComments = new List<AdminPostComment>();
-            _Context.AdminPosts.Add(postObject);
-        }
-            
+        AdminPost adminPostEntity = MapEntityModelFull(postObject, objListFiles);
+
+        _Context.AdminPosts.Add(adminPostEntity);
+
         int result = await _Context.SaveChangesAsync();
+
         return result > 0;
+    }    
+
+
+    public AdminPost MapEntityModelFull
+    ( 
+        AdminPostDataModel from,
+        List<AdminImageFileDataModel> fromListImages                 
+    )
+    {
+        AdminPost objAdminPostEntity = MapAdminPostDataModelToAdminPostEntity ( from );
+
+        objAdminPostEntity.CreateBaseData ( from.ModelBase );
+        objAdminPostEntity.UserID = from.UserID;
+        objAdminPostEntity.User = null;
+
+        List<AdminImageFile> objListFileEntity = MapAdmiFileDataModelToAdminFileEntity(from);
+
+        objAdminPostEntity.ListAdminImageFiles = objListFileEntity;
+        objAdminPostEntity.ListAdminPostComments = new List<AdminPostComment> ( );
+
+        return objAdminPostEntity;
+    }
+
+    private AdminPost MapAdminPostDataModelToAdminPostEntity ( AdminPostDataModel objAdminPostDM )
+    {
+        return new AdminPost ( )
+        {
+            PosterName = objAdminPostDM.PosterName,
+            Title = objAdminPostDM.PostTitle,
+            PostType = ( EnumPostType ) objAdminPostDM.PostTypeID,
+            WebsiteUrl = objAdminPostDM.WebsiteUrl,
+            SearchTag = objAdminPostDM.SearchTag,
+            ShortNote = objAdminPostDM.ShortNote,
+            ListAdminImageFiles = new List<AdminImageFile> ( ),
+            ListAdminPostComments = new List<AdminPostComment> ( ),
+            PosterContactNumber = objAdminPostDM.PosterContactNumber
+        };
+    }
+
+    private List<AdminImageFile> MapAdmiFileDataModelToAdminFileEntity ( AdminPostDataModel adminFileDM )
+    {
+        List<AdminImageFile> objListFileEntity = new List<AdminImageFile>();
+        adminFileDM.ListAdminPostFileImages.ForEach ( fileVM =>
+        {
+            objListFileEntity.Add ( new AdminImageFile ( fileVM.ImageFileContent ) );
+        } );
+        return objListFileEntity;
     }
 }
 

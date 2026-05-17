@@ -1,4 +1,6 @@
-﻿namespace Main.Common.Model;
+﻿using Main.Common.Enums;
+
+namespace Main.Common.Model;
 
 public class ParentChildVriableModel
 {

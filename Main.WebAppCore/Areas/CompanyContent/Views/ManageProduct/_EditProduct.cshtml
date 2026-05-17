@@ -1,0 +1,134 @@
+﻿@model ProductViewModel;
+@inject IStringLocalizer<SharedResource> SharedLocalizer
+
+
+<div id="newProductContainerPartial" class="card-form row">
+    <h4 class="card-title">EDIT PRODUCT</h4>
+
+    <div class="gap"></div>
+    <div class="gap"></div>
+
+    <form id="myMainFormEdit" 
+        method="post" 
+        action="@Url.Action("Edit", "ManageProduct")" 
+        novalidate>
+        
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(a => a.PageName)
+        @Html.HiddenFor(a => a.ModelBase)
+        @Html.HiddenFor(a => a.ProductID)
+
+      
+        <h4 class="card-subtitle">Product Information</h4>
+
+        <div class="gap"></div>
+        
+        <div class="input-field col-md-6 col-sm-6 col-lg-6 col-xs-12">
+            @Html.LabelFor(a => a.CategoryID)
+            <a title="Product Category: This is item category. Please select from the dropdown. Example: Electronics, Women Fashion">
+                <img alt="Help" src="~/lib/Images/Icons/help.png" class="help-icon" />
+            </a>
+           
+            @Html.DropDownListFor(a => a.CategoryID, Model.AV_Category, new { @class = "fff" })
+            @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = "text-danger custom-inline-field-error" })
+        </div>
+
+        <div class="input-field col-md-6 col-sm-6 col-lg-6 col-xs-12">
+            @Html.LabelFor(a => a.SubCategoryID)
+            <a title="Product Sub-Category: This is item sub-category. Each category has a set of sub-categories. Please select from the dropdown. Example: Electronics, Women Fashion">
+                <img alt="Help" src="~/lib/Images/Icons/help.png" class="help-icon" />
+            </a>
+            
+            @Html.DropDownListFor(a => a.SubCategoryID, Model.AV_SubCategory, new { @class = "fff" })
+            @Html.ValidationMessageFor(m => m.SubCategoryID, "", new { @class = "text-danger custom-inline-field-error" })
+        </div>
+
+        <div class="input-field col-md-12 col-sm-12 col-lg-12 col-xs-12">
+            @Html.LabelFor(a => a.ProductName)
+            <a title="Product Name: Write down the name of your product. Examle: iPhone 6, Windows Phone Lumia 650 or Dell Inspiron etc.">
+                <img alt="Help" src="~/lib/Images/Icons/help.png" class="help-icon" />
+            </a>
+
+            @Html.EditorFor(a => a.ProductName, new { htmlAttributes = new { @class = "fff" } })
+            @Html.ValidationMessageFor(m => m.ProductName, "", new { @class = "text-danger custom-inline-field-error" })
+        </div>
+        
+        <div class="input-field col-md-12 col-sm-12 col-lg-12 col-xs-12">
+            @Html.LabelFor(a => a.Description)
+            <a title="">
+                <img alt="Help" src="~/lib/Images/Icons/help.png" class="help-icon" />
+            </a>
+           
+            @Html.TextAreaFor(a => a.Description, new { @class = "fff" })
+        </div>
+      
+        <div class="input-field col-md-12 col-sm-12 col-lg-12 col-xs-12">
+            @Html.LabelFor(a => a.SearchTag)
+            <a title="Search Tags: Put comma seperated key words which can easily find your product when people search in search engine.">
+                <img alt="Help" src="~/lib/Images/Icons/help.png" class="help-icon" />
+            </a>
+           
+            @Html.TextAreaFor(a => a.SearchTag, new { @class = "fff" })
+        </div>
+        
+    
+        <h4 class="card-subtitle">Price Information</h4>
+
+        <div class="gap"></div>
+    
+        <div class="input-field col-md-6 col-sm-6 col-lg-6 col-xs-6">
+            @Html.LabelFor(a => a.UnitPrice)
+            <a title="Product Price: Product Price (Taka) is shop defined product price.">
+                <img alt="Help" src="~/lib/Images/Icons/help.png" class="help-icon" />
+            </a>
+            
+            @Html.EditorFor(a => a.UnitPrice, new { htmlAttributes = new { @class = "fff" } })
+            @Html.ValidationMessageFor(m => m.UnitPrice, "", new { @class = "text-danger custom-inline-field-error" })
+        </div>
+
+        <div class="input-field col-md-6 col-sm-6 col-lg-6 col-xs-12">
+            @Html.LabelFor(a => a.Discount)
+            <a title="Discounted: Discount is a revised Product Price set by the shop owner. Discounted Product Price is thefinal Product Price set by shop. If shop has no discounted price, please put same amount in both price fields.">
+                <img alt="Help" src="~/lib/Images/Icons/help.png" class="help-icon" />
+            </a>
+           
+            @Html.EditorFor(a => a.Discount, new { htmlAttributes = new { @class = "fff" } })
+        </div>
+
+        <div class="input-field col-md-6 col-sm-6 col-lg-6 col-xs-12">
+            @Html.LabelFor(a => a.SaleCommission)
+            <a title="Sale Commission: Sale Commission is the commission set by the shop owner for each sale.">
+                <img alt="Help" src="~/lib/Images/Icons/help.png" class="help-icon" />
+            </a>
+          
+            @Html.EditorFor(a => a.SaleCommission, new { htmlAttributes = new { @class = "fff" } })
+        </div>
+
+    </form>
+
+    <h4 class="card-subtitle">Product Pictures</h4>
+
+    <div class="gap"></div>
+
+    <div class="upload-container image-field col-md-4 col-sm-6 col-lg-4 col-xs-12">
+        <input type="file" id="fileInput" class="light-button btn-sm" name="myFile" />
+  
+        <button type="button" id="btnUpload" class="light-button btn-sm">Add New Picture</button>
+    </div>
+
+    <div class="image-field col-md-12 col-xs-12 col-sm-12 col-lg-12" id="imagePanelContainer">
+        @{
+            foreach (var item in Model.ImageFiles.ToList())
+            {
+                @await Html.PartialAsync("~/Areas/CompanyContent/Views/ManageProduct/_Image.cshtml", item)
+            }
+        }
+    </div>
+
+    <div class="gap"></div>
+    
+    <button id="btnSubmit" class="primary-button max" type="submit" form="myMainFormEdit">
+        @SharedLocalizer["NewPostButtonSUBMITAD"]
+    </button>
+</div>
+

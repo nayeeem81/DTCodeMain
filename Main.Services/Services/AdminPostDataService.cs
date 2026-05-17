@@ -1,20 +1,20 @@
-﻿using Main.Common;
-using IService;
+﻿using IService;
 using IRepository;
 using BusinessModel;
-using Main.Model;
+
+using System.Reflection.Metadata.Ecma335;
+
+using Main.Common.Enums;
 
 namespace Main.Service;
 
 public class AdminPostDataService: IAdminPostDataService
 {
     private readonly IAdminPostRepository _AdminPostRepository;
-    private readonly IAdminPostMappingService _AdminPostMappingService;
 
-    public AdminPostDataService ( IAdminPostRepository adminPostRepository,IAdminPostMappingService adminPostMappingService )
+    public AdminPostDataService ( IAdminPostRepository adminPostRepository )
     {
         _AdminPostRepository = adminPostRepository;
-        _AdminPostMappingService = adminPostMappingService;
     }
 
     public async Task<List<AdminPostDataModel>> GetAllAdminPosts ( )
@@ -23,35 +23,39 @@ public class AdminPostDataService: IAdminPostDataService
 
         List<AdminPostDataModel> objListPostVM = new List<AdminPostDataModel>();
 
-        AdminPostDataModel objModel;
-
-        foreach ( AdminPost item in listPosts.ToList ( ) )
-        {
-            objModel = new AdminPostDataModel ( );
-            _AdminPostMappingService
-                  .MapAdminPostEntityToAdminPostViewModelListModel ( item,objModel );
-
-            objListPostVM.Add ( objModel );
-        }
-
         return objListPostVM;
+
+        //AdminPostDataModel objModel;
+
+        //foreach ( AdminPostDataModel item in listPosts.ToList ( ) )
+       // {
+           // objModel = new AdminPostDataModel ( );
+
+            //_AdminPostMappingService
+            //      .MapAdminPostEntityToAdminPostViewModelListModel ( item,objModel );
+
+           // objListPostVM.Add ( objModel );
+      //  }
+
+    //return objListPostVM;
+        
     }
 
     public async Task<bool> SaveNewAdminPost ( AdminPostDataModel objAdminPostVM )
     {
+        //AdminPost objAdminPostEntity = _AdminPostMappingService.MapAdminPostViewModelToAdminPostEntity(objAdminPostVM);
 
-        AdminPost objAdminPostEntity = _AdminPostMappingService.MapAdminPostViewModelToAdminPostEntity(objAdminPostVM);
-
-        objAdminPostEntity.CreateBaseData ( objAdminPostVM.ModelBase );
-        objAdminPostEntity.UserID = objAdminPostVM.UserID;
-        objAdminPostEntity.User = null;
+        //objAdminPostEntity.CreateBaseData ( objAdminPostVM.ModelBase );
+        //objAdminPostEntity.UserID = objAdminPostVM.UserID;
+        //objAdminPostEntity.User = null;
 
 
-        List<AdminImageFile> objListFileEntity = _AdminPostMappingService.MapAdmiFileViweModelToAdminFileEntity(objAdminPostVM);
+        //List<AdminImageFile> objListFileEntity = _AdminPostMappingService.MapAdmiFileViweModelToAdminFileEntity(objAdminPostVM);
 
-        var result = await _AdminPostRepository.SaveNewAdminPost(objAdminPostEntity, objListFileEntity);
+        //var result = await _AdminPostRepository.SaveNewAdminPost(objAdminPostEntity, objListFileEntity);
 
-        return result;
+        //return result;
+        return true;
     }
 
 
@@ -123,25 +127,25 @@ public class AdminPostDataService: IAdminPostDataService
             post.User = null;
         }
 
-        List<AdminImageFile> images = new List<AdminImageFile>();
+        List<AdminImageFileDataModel> images = new List<AdminImageFileDataModel>();
 
         images.AddRange ( post.ListAdminImageFiles );
 
         objPostVm.ListAdminPostFileImages.ForEach ( fileVM =>
         {
-            var objFile = new AdminImageFile(fileVM.ImageFileContent);
+            var objFile = new AdminImageFileDataModel(fileVM.ImageFileContent);
             objFile.AdminPostID = post.AdminPostID;
             images.Add ( objFile );
         } );
 
 
-        List<AdminPostComment> comments = new List<AdminPostComment>();
+        List<AdminPostCommentDataModel> comments = new List<AdminPostCommentDataModel>();
 
         comments.AddRange ( post.ListAdminPostComments );
 
         objPostVm.ListAdminPostComments.ForEach ( commentVM =>
         {
-            var objComment = new AdminPostComment();
+            var objComment = new AdminPostCommentDataModel();
             objComment.AdminPostID = post.AdminPostID;
             objComment.Comment = commentVM.Comment;
             comments.Add ( objComment );

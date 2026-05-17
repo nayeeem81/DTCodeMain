@@ -1,5 +1,6 @@
-﻿using Main.Common;
-using Main.Model;
+﻿using Main.Common.Enums;
+using Entity.Model;
+
 namespace IRepository;
 
 public interface IAdminPostImageRepository

@@ -1,0 +1,26 @@
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
+
+namespace FineArtsWebApp
+{
+    public class ProductCommentViewModel : BaseViewModel
+    {
+        public ProductCommentViewModel() { }
+
+        public ProductCommentViewModel(string comment) {
+            Comment = comment;
+        }
+
+        public int ProductCommentID { get; set; }
+
+        public string Comment { get; set; } = string.Empty;
+
+        public int ProductID { get; set; }
+   
+        public ProductViewModel Product { get; set; }
+    }
+}

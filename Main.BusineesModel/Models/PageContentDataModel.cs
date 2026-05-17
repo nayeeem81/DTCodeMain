@@ -1,5 +1,5 @@
 ﻿using Main.Common;
-using Main.Common.EnumClasses;
+using Main.Common.Enums;
 
 namespace BusinessModel;
 
@@ -9,9 +9,7 @@ public class PageContentDataModel: BaseDataModel
     public PageContentDataModel()
     {
         ListPagePanels = new List<PagePanelDataModel>();
-
-        AV_PanelTemplate = DropDownSelectListItem.GetPanelTempletList();
-
+       
         ListSelectProducts = new List<PanelPostDataModel>();
 
         ListSelectAds = new List<PanelPostDataModel>();
@@ -20,9 +18,7 @@ public class PageContentDataModel: BaseDataModel
 
     public PageContentDataModel(int pageId)
     {
-        ListPagePanels = new List<PagePanelViewModel>();
-
-        AV_PanelTemplate = DropDownSelectListItem.GetPanelTempletList();
+        ListPagePanels = new List<PagePanelDataModel>();
 
         ListSelectProducts = new List<PanelPostDataModel>();
 
@@ -31,27 +27,18 @@ public class PageContentDataModel: BaseDataModel
         PageID = pageId;
     }
 
-
     public int PageContentID { get; set; }
-
-
 
     public int PageID { get; set; }
 
-
-
     public PageDataModel? Page { get; set; }
 
-
-    [Display(Name = "Panel Title")]
     public string PanelTitle { get; set; }
 
-    [Display(Name = "Panel Template")]
-    public EnumPanelTemplate EnumPanelTemplate { get; set; }
-
-
-    public IEnumerable<SelectListItem> AV_PanelTemplate { get; set; }
-
+    public EnumPanelTemplate EnumPanelTemplate
+    {
+        get; set;
+    }
 
     public List<PanelPostDataModel> ListSelectProducts { get; set; }
 
@@ -60,14 +47,14 @@ public class PageContentDataModel: BaseDataModel
 
 
   
-    public List<PagePanelViewModel> ListPagePanels { get; set; }
+    public List<PagePanelDataModel> ListPagePanels { get; set; }
 
 
-    public void CreatePagePanel(PagePanelViewModel pagePanel)
+    public void CreatePagePanel(PagePanelDataModel pagePanel)
     {
         if (ListPagePanels == null)
         {
-            ListPagePanels = new List<PagePanelViewModel>();
+            ListPagePanels = new List<PagePanelDataModel>();
         }
 
         if (pagePanel != null)
@@ -102,14 +89,14 @@ public class PageContentDataModel: BaseDataModel
     }
 
 
-    public void RemovePagePanel(PagePanelViewModel pagePanel)
+    public void RemovePagePanel(PagePanelDataModel pagePanel)
     {
         if (ListPagePanels == null)
         {
             return;
         }
 
-        if (ListPagePanels.Contains<PagePanelViewModel>(pagePanel))
+        if (ListPagePanels.Contains<PagePanelDataModel>(pagePanel))
         {
             ListPagePanels.Remove(pagePanel);
         }

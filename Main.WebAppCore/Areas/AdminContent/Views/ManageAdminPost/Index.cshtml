@@ -1,0 +1,77 @@
+﻿
+@model ManageAdminPostViewModel
+@inject IStringLocalizer<SharedResource> SharedLocalizer
+
+@{
+    ViewData["Title"] = "Manage Admin Contents";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.ExcludeHeader = true;
+}
+
+<div id="manageAdminPostDesktop" class="container">
+
+    <div class="card-form">
+
+        <h4 class="card-title">MANAGE ADMIN POSTS</h4>
+
+        <div class="gap"></div>
+        <div class="gap"></div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ListAdminPost[0].PostTypeID)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ListAdminPost[0].PosterName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ListAdminPost[0].PostTitle)
+                    </th>
+           
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ListAdminPost.ToList()) {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EnumAdminPostTypeDescription)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PosterName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PostTitle)
+                        </td>
+           
+                        <td data-label="Action">
+                            <a title="View Admin Content"
+                                    class="icon-button flex"
+                                    href="@Url.Action("Details", "ManageAdminPost", new { Area = "AdminContent", id = item.AdminPostID })">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                            <a title="Edit Admin Content"
+                                    class="icon-button flex"
+                                    href="@Url.Action("Edit", "ManageAdminPost", new { Area = "AdminContent", id = item.AdminPostID })">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <a title="Remove Admin Content"
+                                    class="icon-button flex"
+                                    href="@Url.Action("Delete", "ManageAdminPost", new { Area = "AdminContent", id = item.AdminPostID })">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scriptsapp {
+    <script>
+        PAGE_NAME = '@Model.PageName';
+    </script>
+}

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
-using Main.Model;
-using Main.Common.EnumClasses;
+using Entity.Model;
+using Main.Common.Enums;
 
 namespace Data;
 
@@ -72,13 +71,9 @@ public class BussinessAppDbContext ( DbContextOptions<BussinessAppDbContext> opt
 
         modelBuilder.Entity<Page>().HasData(new Page(EnumPublicPage.SubCategoryDropdownMarket, 6));
 
-        modelBuilder.Entity<Page>().HasData(new Page(EnumPublicPage.FabiaDetail, 7));
-
         modelBuilder.Entity<Page>().HasData(new Page(EnumPublicPage.CategoryButtonMarket, 8));
 
         modelBuilder.Entity<Page>().HasData(new Page(EnumPublicPage.NoticeAndNews, 9));
-
-        modelBuilder.Entity<Page>().HasData(new Page(EnumPublicPage.PostNewAd, 10));
 
         modelBuilder.Entity<Page>().HasData(new Page(EnumPublicPage.Resources, 11));
 

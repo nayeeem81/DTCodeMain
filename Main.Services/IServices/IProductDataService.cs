@@ -1,19 +1,20 @@
-﻿using Common;
+﻿using BusinessModel;
+using Main.Common;
 
 namespace IService;
 
 public interface IProductDataService
-    {
-        Task<List<ProductViewModel>> GetAllProducts();
+{
+    Task<List<ProductDataModel>> GetAllProducts();
 
-        Task<bool> SaveNewProduct(ProductViewModel objPostVm);
+    Task<bool> SaveNewProduct(ProductDataModel objPostVm);
 
-        Task<ProductViewModel> GetProductForEditProductID(int productID);
+    Task<ProductDataModel> GetProductForEditProductID(int productID);
 
-        Task<bool> UpdateProduct(ProductViewModel objPostVm);
+    Task<bool> UpdateProduct(ProductDataModel objPostVm);
 
-        Task<bool> DeleteProductImage(int id, int productId);
+    Task<bool> DeleteProductImage(int id, int productId);
 
-        Task<bool> DeleteProduct(int productId);
-    }
+    Task<bool> DeleteProduct(int productId);
+}
 

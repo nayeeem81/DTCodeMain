@@ -6,6 +6,11 @@ public class AdminImageFileDataModel : BaseDataModel
     {
     }
 
+    public AdminImageFileDataModel ( byte[] imageFileContent )
+    {
+        ImageFileContent = imageFileContent;
+    }
+
     public int AdminImageFileID { get; set; }
    
     public byte[] ImageFileContent { get; set; }

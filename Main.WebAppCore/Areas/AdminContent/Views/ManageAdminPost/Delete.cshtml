@@ -1,0 +1,26 @@
+﻿@using FineArtsWebApp;
+@model AdminPostViewModel
+
+@{
+    ViewBag.Title = "Delete Admin Post";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.ExcludeHeader = true;
+}
+
+<div class="container">
+
+    <div class="card-form">
+
+    <h4 class="card-title">Are you sure, you want to delete this post?</h4>
+
+    <div class="gap"></div>
+    <div class="gap"></div>
+
+        <div class="form-actions">
+            <a href="@Url.Action("DeleteAdminPost", "ManageAdminPost", new { Area = "AdminContent", id = Model.AdminPostID, fakeId = 1 })" class="btn btn-primary btn-sm btn-success">DELETE</a> &nbsp;|&nbsp;
+                
+            <a href="@Url.Action("Index", "ManageAdminPost", new { Area = "AdminContent" })" class="btn btn-primary btn-sm btn-success">BACK TO LIST</a>
+        </div>
+
+    </div>
+</div>

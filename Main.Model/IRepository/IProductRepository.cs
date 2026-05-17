@@ -1,4 +1,4 @@
-﻿using Main.Model;
+﻿using Entity.Model;
 namespace IRepository;
 
 public interface IProductRepository

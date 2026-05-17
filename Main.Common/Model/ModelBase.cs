@@ -1,4 +1,5 @@
-﻿using Main.Common.HelperRelated;
+﻿using Main.Common.Enums;
+using Main.Common.HelperRelated;
 
 namespace Main.Common.Model;
 
@@ -82,3 +83,31 @@ public class ModelBaseService: IModelBaseService
         return objModleBaseLocal;
     }
 }
+
+public class LocalModel
+{
+    public LocalModel ( )
+    {
+    }
+
+    public string? PanelTitle
+    {
+        get; set;
+    }
+
+    public int TemplateTypeID
+    {
+        get; set;
+    }
+
+    public int PageID
+    {
+        get; set;
+    }
+
+    public List<int> Numbers
+    {
+        get; set;
+    }
+}
+

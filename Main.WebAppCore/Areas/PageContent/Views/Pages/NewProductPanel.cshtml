@@ -1,0 +1,300 @@
+﻿@model PagePanelViewModel
+@inject IStringLocalizer<SharedResource> SharedLocalizer
+
+@{
+    ViewData["Title"] = "Add Product Template";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.ExcludeHeader = true;
+}
+
+<div class="container">
+
+    <div class="gap"></div>
+
+    <h4 class="card-title">NEW PANEL (PRODUCTS)</h4>
+
+    <form id ="frmMain">
+    <div class="gap"></div>
+  
+        @Html.HiddenFor( a => a.PageID )
+        <div class="row">
+            <div class="input-field col-md-8">
+                @Html.LabelFor( a => a.PanelTemplate )
+                @Html.DropDownListFor(a => a.PanelTemplate, Model.AV_PanelTemplate, new { @class = "fff" })
+                @Html.ValidationMessageFor(m => m.PanelTemplate, "", new { @class = "text-danger custom-inline-field-error" })
+            </div>       
+        </div>
+
+
+        <div class="row">
+            <div class="input-field  col-md-8">
+                @Html.LabelFor( a => a.PanelTitle )
+                @Html.EditorFor(a => a.PanelTitle, new { htmlAttributes = new { @class = "fff" } })
+                @Html.ValidationMessageFor(m => m.PanelTitle, "", new { @class = "text-danger custom-inline-field-error" })
+            </div>
+        </div>
+    </form>
+
+        
+    <button id="btnSave" role="button"
+            class="primary-button max">
+        SAVE
+    </button>
+
+    
+    <div class="gap"></div>
+
+
+    <div class="row">
+
+        <!-- Left Column -->
+        <span><i class="fa fa-box-open"></i>DROP YOUR PRODUCTS HERE:</span>
+
+        <div id="dropHereCotainer" class="col-md-2 card-form">
+           
+        </div>
+
+
+        <!-- Right Column -->
+        <div id="dropFromContainer" class="col-md-10 card-form">
+                @{
+                    foreach (var product in Model.ListSelectProducts)
+                    {
+                        <div id="@product.PanelPostID" 
+                             draggable="true" 
+                             style="display:inline-block;
+                                    padding:2px;    
+                                    margin-bottom:15px;">
+
+                            @await Html.PartialAsync("~/Areas/PageContent/Views/Pages/PanelPartials/_SelectImage.cshtml", product)
+                            
+                            <div class="text-bg-info" draggable="false"> 
+                                @product.GetTextCategory()
+                            </div>
+                            <div draggable="false">@product.Price Taka</div>
+                        </div>
+
+                        <script>
+
+                            document.getElementById('@product.PanelPostID')
+                                    .addEventListener('dragstart', (e) => 
+                            {
+
+                                e.dataTransfer.setData('text/plain', e.target.id);
+
+    
+                                e.dataTransfer.effectAllowed = 'all';
+
+                            });
+
+                        </script>
+                    }
+                }
+        </div>
+    </div>
+</div>
+
+
+
+
+@section scriptsapp {
+
+    @await Html.PartialAsync( "~/Views/Shared/_ValidationScriptsPartial.cshtml" )
+
+    <script>
+        var notify = $.notify;
+        var panelTitle = '';
+        var pageId = '@Model.PageID';
+        var panelTemplateId =  document.getElementById("PanelTemplate").value;
+        let numbers = [];
+        
+        
+        $(function() {
+
+            numbers = [];
+
+            const btnSave = document.getElementById('btnSave');
+
+            const copyZone = document.getElementById('dropHereCotainer');
+
+
+            const sendData = async (e) => {
+
+                e.preventDefault();
+
+                var elementTemplate = document.getElementById("PanelTemplate");
+                if (elementTemplate)
+                {
+                    panelTemplateId = elementTemplate.value;
+                }
+
+                var elementPage = document.getElementById("PageID");
+                if (elementPage)
+                {
+                    pageId = elementPage.value;
+                }
+                
+                var elementPanelTitle = document.getElementById("PanelTitle");
+                if (elementPanelTitle)
+                {
+                    panelTitle = elementPanelTitle.value;
+                }
+
+
+                const data = {
+                    PanelTitle: panelTitle,
+                    TemplateTypeID: panelTemplateId,
+                    PageID: pageId,
+                    Numbers: numbers
+                };
+
+
+                const response = await fetch('@Url.Action("SaveNewProductPanel", "Pages", new { Area = "PageContent" })', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json' 
+                    },
+                    body: JSON.stringify(data) 
+                });
+
+                if (response.ok) 
+                {
+                    const result = await response.json();
+                    console.log("Success:", result); 
+                    window.location.href = result.receivedUrl;
+                } 
+                else 
+                {
+                    console.log("Error:", response.statusText);
+                }
+            }
+            
+            
+            btnSave.addEventListener('click', sendData);
+
+     
+            copyZone.addEventListener('dragover', (e) => 
+            {
+                e.preventDefault();
+
+                if($("frmMain").valid()){
+                    return;
+                }
+
+                e.dataTransfer.dropEffect = 'move';
+            });
+
+
+    
+            const handleDrop = (event) => {
+
+                event.preventDefault();
+
+                if(!$("#frmMain").valid()){
+                    return;
+                }
+
+                // 1. Get the drop target's position and size
+                const rect = event.currentTarget.getBoundingClientRect();
+
+                // 2. Subtract the target's position from the mouse position
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+
+                
+                const id = event.dataTransfer.getData('text/plain');
+
+
+                const element = document.getElementById(id);
+
+    
+                if (event.dataTransfer.dropEffect === 'copy') {
+
+                    const clone = element.cloneNode(true);
+
+                    event.target.append(clone);
+
+                    numbers.push(id);
+
+                }
+                else 
+                {
+
+                    var elementDdl = document.getElementById("PanelTemplate");
+
+                    if (elementDdl) {
+                        panelTemplateId = elementDdl.value;
+                    }
+
+                    if(panelTemplateId == "")
+                    {
+                        notify({
+                            type: 'error',
+                            message: '<strong><i class="fa fa-thumbs-up"></i>&nbsp;' + 'ERROR:' + '</strong> ' + 'Template  must select first!',
+                            allow_dismiss: true,
+                            placement: {
+                                from: "top",
+                                align: "right"
+                            },
+                            delay: { show: 10, hide: 10 },
+                            template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss"><span class="close-icon">&times;</span></button>' +
+                                '<span data-notify="icon"></span>' +
+                                '<span data-notify="title">{1}</span>' +
+                                '<span data-notify="message">{2}</span>' +
+                                '</div>'
+                        });
+
+                        return;
+                    }
+
+                    if(panelTemplateId == 9) //Doube (id 9)
+                    {
+                        if(numbers.length < 2)
+                        {
+                            event.target.append(element);
+                            numbers.push(id);
+                        }
+                       
+                    }
+                    else if(panelTemplateId == 2) //Triangle (id 2)
+                    {
+                        if(numbers.length < 3)
+                        {
+                            event.target.append(element);
+                            numbers.push(id);
+                        }
+                    }
+                    else if(panelTemplateId == 1) //Quad (id 1)
+                    {
+                         if(numbers.length < 4)
+                         {
+
+                            event.target.append(element);
+                            numbers.push(id);
+                         }
+                    }
+                    else if(panelTemplateId == 3) //Sixer (id 3)
+                    {
+                        if(numbers.length < 6)
+                        {
+                            event.target.append(element);
+                            numbers.push(id);
+                        }
+                    }
+                }
+                
+            };
+
+            
+            copyZone.addEventListener('drop', handleDrop);
+
+
+             if(!$("#frmMain").valid()){
+                    return;
+             }
+             
+        });
+
+    </script>
+}

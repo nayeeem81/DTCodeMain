@@ -1,0 +1,105 @@
+﻿
+@model ProductViewModel
+@inject IStringLocalizer<SharedResource> SharedLocalizer
+
+
+<div id="detailsAdminPostContainerPartial" class="card-form">
+
+    <h4 class="card-title">PRODUCT INFORMATION</h4>
+
+    <div class="gap"></div>
+    <div class="gap"></div>
+
+    <h4 class="card-subtitle">Product Information</h4>
+
+    <div class="gap"></div>
+
+    <div class="row">
+        <div class="input-field col-md-12 col-sm-12 col-lg-12 col-xs-12">
+            @Html.LabelFor(a => a.CategoryText)
+            @Html.DisplayFor(a => a.CategoryText, new { htmlAttributes = new { @class = "fff" } })
+        </div>
+
+        <div class="input-field col-md-12 col-sm-12 col-lg-12 col-xs-12">
+            @Html.LabelFor(a => a.SubCategoryText)
+            @Html.DisplayFor(a => a.SubCategoryText, new { htmlAttributes = new { @class = "fff" } })
+        </div>
+
+        <div class="input-field col-md-12 col-sm-12 col-lg-12 col-xs-12">
+            @Html.LabelFor(a => a.ProductName)
+            @Html.DisplayFor(a => a.ProductName, new { htmlAttributes = new { @class = "fff" } })
+         </div>
+
+        <div class="input-field  col-md-12 col-sm-12 col-lg-12 col-xs-12">
+            @Html.LabelFor(a => a.Description)
+            @Html.DisplayFor(a => a.Description, new { htmlAttributes = new { @class = "fff" } })
+        </div>
+
+        <div class="input-field  col-md-12 col-sm-12 col-lg-12 col-xs-12">
+            @Html.LabelFor(a => a.SearchTag)
+            @Html.DisplayFor(a => a.SearchTag, new { htmlAttributes = new { @class = "fff" } })
+        </div>
+    </div>
+
+    <h4 class="card-subtitle">Price Information</h4>
+
+    <div class="gap"></div>
+
+    <div class="row">
+
+        <div class="input-field  col-md-12 col-sm-12 col-lg-12 col-xs-12">
+            @Html.LabelFor(a => a.UnitPrice)
+            @Html.DisplayFor(a => a.UnitPrice, new { htmlAttributes = new { @class = "fff" } })
+        </div>
+
+        <div class="input-field  col-md-12 col-sm-12 col-lg-12 col-xs-12">
+            @Html.LabelFor(a => a.Discount)
+            @Html.DisplayFor(a => a.Discount, new { htmlAttributes = new { @class = "fff" } })
+        </div>
+
+        <div class="input-field  col-md-12 col-sm-12 col-lg-12 col-xs-12">
+            @Html.LabelFor(a => a.SaleCommission)
+            @Html.DisplayFor(a => a.SaleCommission, new { htmlAttributes = new { @class = "fff" } })
+        </div>
+
+    </div>
+    
+    <div class="gap"></div>
+
+    <h4 class="card-subtitle">Product Pictures</h4>
+
+    <div class="row">
+        <div class="image-field col-md-12 col-sm-12 col-lg-12 col-xs-12" id="imageEditPanelContainer">
+            @{ 
+                foreach(var item in Model.ImageFiles.ToList())
+                {
+                    @await Html.PartialAsync("~/Areas/CompanyContent/Views/ManageProduct/_ViewImage.cshtml", item)
+                }
+            }
+        </div>   
+    </div>
+
+    <div class="gap"></div>
+
+    <div class="align-items-center align-content-center">
+        <a title="List Admin Content"
+                class="icon-button flex link-dark"
+                href="@Url.Action("Index", "ManageProduct")">
+            <i class="fa fa-list"></i>
+            <span class="action-text">LIST</span>
+        </a>
+        <a title="Edit Admin Content"
+                class="icon-button flex link-dark"
+                href="@Url.Action("Edit", "ManageProduct", new { id = Model.ProductID })">
+            <i class="fa fa-edit"></i>
+            <span class="action-text">EDIT</span>
+        </a>
+        <a title="Remove Admin Content"
+                class="icon-button flex link-dark"
+                href="@Url.Action("Delete", "ManageProduct", new { id = Model.ProductID })">
+            <i class="fa fa-trash"></i>
+            <span class="action-text">DELETE</span>
+        </a>
+    </div>
+
+</div>

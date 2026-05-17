@@ -1,0 +1,14 @@
+﻿@model PanelPostViewModel
+
+<div id="product@Model.ImageFileID"
+     class="panel-post-view-model"
+     data-postId="@Model.RootID"
+     data-imageFileId="@Model.ImageFileID"
+     draggable="false">
+
+        @await Html.PartialAsync("~/Areas/PageContent/Views/Pages/PanelPartials/_ImageDrop.cshtml", Model.ImageFileContent)
+        
+</div>
+
+
+

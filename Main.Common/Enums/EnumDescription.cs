@@ -1,4 +1,4 @@
-﻿namespace Main.Common;
+﻿namespace Main.Common.Enums;
 
 public static class EnumDescription
 {
