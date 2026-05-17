@@ -1,5 +1,6 @@
 ﻿using BusinessModel;
 using Main.Common;
+using Main.Common.Enum;
 using Main.Common.Model;
 
 namespace IService;

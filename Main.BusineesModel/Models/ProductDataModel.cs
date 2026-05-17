@@ -1,4 +1,4 @@
-﻿using Main.Common.EnumClasses;
+﻿using Main.Common.Enum;
 
 namespace BusinessModel;
 

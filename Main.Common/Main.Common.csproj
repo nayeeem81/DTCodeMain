@@ -38,4 +38,8 @@
     <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ResourceLibrary\ResourceLibrary.csproj" />
+  </ItemGroup>
+
 </Project>

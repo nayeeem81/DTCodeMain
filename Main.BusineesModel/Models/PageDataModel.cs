@@ -1,5 +1,5 @@
 ﻿using Main.Common;
-using Main.Common.EnumClasses;
+using Main.Common.Enum;
 using Main.Common.Model;
 
 namespace BusinessModel

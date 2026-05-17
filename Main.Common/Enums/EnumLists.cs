@@ -1,8 +1,9 @@
 ﻿using Main.Common.Model;
 using System.ComponentModel;
 using System.Reflection;
+using Main.Common.Enum;
 
-namespace Main.Common;
+namespace Main.Common.Enums;
 
 public class ListEnum
 {
@@ -522,7 +523,7 @@ public class ListEnum
         return objCountryList;
     }
 
-    public static string? GetPageDescription(EnumPublicPage? page)
+    public static string? GetPageDescription(EnumPublicPage page)
     {
         Type enumType = typeof(EnumPublicPage);
         var enumValues = enumType.GetEnumValues();
@@ -533,7 +534,7 @@ public class ListEnum
                 enumType.GetMember(value.ToString()).First();
             var descriptionAttribute =
                 memberInfo.GetCustomAttribute<DescriptionAttribute>();
-            if (value == page.Value)
+            if (value == page)
             {
                 if (descriptionAttribute != null)
                 {

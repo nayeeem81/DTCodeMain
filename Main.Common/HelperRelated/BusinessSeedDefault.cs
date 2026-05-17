@@ -1,7 +1,7 @@
 ﻿using Main.Common;
+using Main.Common.Enum;
 using Main.Common.Model;
-
-namespace Main.Common.Helper;
+using ResourceLibrary; 
 
 //Default (Vendor: DeshiHutBazar)
 public static class BusinessSeedDefault
@@ -13,7 +13,8 @@ public static class BusinessSeedDefault
             //category
             new ParentChildVriableModel()
             {
-                ValueID = (int) EnumMarket.Beauty , ParentValueID = 0, Variable = EnumAllowedVariable.Category, Text = GlobalResources.Localizer["Beauty"], IconLink= "fas fa-user-injured"
+                ValueID = (int) EnumMarket.Beauty , ParentValueID = 0, Variable = EnumAllowedVariable.Category, Text = GlobalResources.Localizer["Beauty"], 
+                  IconLink= "fas fa-user-injured"
             },
 
             new ParentChildVriableModel()

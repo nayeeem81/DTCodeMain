@@ -1,5 +1,5 @@
-﻿using Main.Common;
-using Main.Common.EnumClasses;
+﻿using Main.Common.Enum;
+using Main.Common.Settings;
 
 namespace BusinessModel;
 
@@ -7,7 +7,8 @@ public class BaseDataModel
 {
         public BaseDataModel()
         {
-            Currency = StaticAppSettings.Currency;
+            Currency = ( EnumCurrency? )  AppSettings.Current
+                         .EnumCurrency;
         }
 
         public string? PageName { get; set; } = string.Empty;

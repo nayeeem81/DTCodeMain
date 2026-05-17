@@ -12,4 +12,5 @@
     <BuildDependency Project="Main.Common/Main.Common.csproj" />
     <BuildDependency Project="Main.Model/Main.Model.csproj" />
   </Project>
+  <Project Path="ResourceLibrary/ResourceLibrary.csproj" Id="4c814463-ebb6-41cf-b094-8467255e7a55" />
 </Solution>

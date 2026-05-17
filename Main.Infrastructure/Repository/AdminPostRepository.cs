@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Main.Model;
-using IRepository;
+using Entity.Model;
 using Data;
+using IRepository;
 
 namespace Repository;
 

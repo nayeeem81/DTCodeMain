@@ -1,4 +1,4 @@
-﻿namespace Main.Common;
+﻿namespace Main.Common.Settings;
 
 public class MyConfigSettings
 {

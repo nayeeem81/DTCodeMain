@@ -1,5 +1,6 @@
-﻿using Main.Common.EnumClasses;
-using Main.Model;
+﻿using Main.Common.Enum;
+using Entity.Model;
+
 namespace IRepository;
 
 public interface IProductImageRepository

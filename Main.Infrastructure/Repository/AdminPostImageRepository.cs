@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using IRepository;
-using Main.Model;
-using Main.Common;
+using Entity.Model;
+using Main.Common.Enum;
 using Data;
+using IRepository;
 
 namespace Repository;
 

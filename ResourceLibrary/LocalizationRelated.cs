@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Localization;
 
-namespace Main.WebAppCore.Helper;
-
+namespace ResourceLibrary;
+                              
 public static class GlobalResources
 {
     public static IStringLocalizer<SharedResource> Localizer 
