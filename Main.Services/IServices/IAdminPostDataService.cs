@@ -6,11 +6,11 @@ public interface IAdminPostDataService
 {
     Task<List<AdminPostDataModel>> GetAllAdminPosts ( );
 
-    Task<bool> SaveNewAdminPost ( AdminPostDataModel objPostVm );
+    Task<bool> SaveNewAdminPost ( AdminPostDataModel objPostDm );
 
     Task<AdminPostDataModel> GetAdminPostForEditPostID ( int postID );
 
-    Task<bool> UpdateAdminPost ( AdminPostDataModel objPostVm );
+    Task<bool> UpdateAdminPost ( AdminPostDataModel objPostDm );
 
     Task<bool> DeleteAdminPostImage ( int id,int postId );
 

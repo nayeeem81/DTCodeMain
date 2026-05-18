@@ -15,4 +15,6 @@ public interface IProductRepository
     Task<ProductDataModel> GetProductByProductID(int productId);
 
     Task<bool> SaveNewProduct(ProductDataModel productObject, List<ProductFileDataModel> objListFiles);
+
+    Task<bool> UpdateProduct ( ProductDataModel objPostDM );
 }

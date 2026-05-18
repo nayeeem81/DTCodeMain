@@ -2,7 +2,6 @@
 using Data;
 using Entity.Model;
 using IRepository;
-
 using Main.Common.Enums;
 
 using Microsoft.EntityFrameworkCore;
@@ -196,5 +195,60 @@ public class ProductRepository : IProductRepository
         } );
         return objListFileEntity;
     }
+
+    public async Task<bool> UpdateProduct ( ProductDataModel objPostDm )
+    {
+        var product = await _Context.Products.SingleAsync<Product>
+             (a => a.ProductID == objPostDm.ProductID);
+
+        product.ModifyBaseData ( objPostDm.ModelBase );
+
+        product.UserID = objPostDm.UserID;
+        product.User = null;
+
+
+        List<ProductImageFile> images = new List<ProductImageFile>();
+
+        images.AddRange ( product.ListImageFiles );
+
+        objPostDm.ImageFiles.ForEach ( fileDM =>
+        {
+            var objFile = new ProductImageFile(fileDM.ImageFileContent);
+            objFile.ProductID = product.ProductID;
+            images.Add ( objFile );
+        } );
+
+
+        List<ProductComment> comments = new List<ProductComment>();
+
+        comments.AddRange ( product.ListComments );
+
+        objPostDm.ListComments.ForEach ( commentVM =>
+        {
+            var objComment = new ProductComment();
+            objComment.ProductID = product.ProductID;
+            objComment.Comment = commentVM.Comment;
+            comments.Add ( objComment );
+        } );
+
+        product.ProductName = objPostDm.ProductName;
+        product.Discount = objPostDm.Discount;
+        product.SaleCommission = objPostDm.SaleCommission;
+        product.SearchTag = objPostDm.SearchTag;
+        product.PostType = EnumPostType.Product;
+        product.Description = objPostDm.Description;
+        product.CategoryID = objPostDm.CategoryID;
+        product.SubCategoryID = objPostDm.SubCategoryID;
+        product.Price = objPostDm.UnitPrice;
+        product.ListComments = comments;
+        product.ListImageFiles = images;
+
+        _Context.Products.Update ( product );
+
+        var result = await _Context.SaveChangesAsync ();
+
+        return result > 0;
+    }
+
 }
 

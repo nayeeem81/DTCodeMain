@@ -76,8 +76,8 @@ public class AdminPostRepository : IAdminPostRepository
         return result > 0;
     }
 
-    public async Task<AdminPostDataModel> GetAdminPostByPostID(
-                                                     int postId)
+    public async Task<AdminPostDataModel> 
+        GetAdminPostByPostID(int postId)
     {
         var postEntity = await _Context.AdminPosts.SingleAsync
                            (a => a.AdminPostID == postId);
@@ -140,19 +140,78 @@ public class AdminPostRepository : IAdminPostRepository
         return objModel;
     }
 
-    public async Task<bool> SaveNewAdminPost(AdminPostDataModel postObject, List<AdminImageFileDataModel> objListFiles)
+    public async Task<bool> SaveNewAdminPost(
+        AdminPostDataModel postObject, 
+        List<AdminImageFileDataModel> objListFiles)
     {
-        AdminPost adminPostEntity = MapEntityModelFull(postObject, objListFiles);
+        AdminPost adminPostEntity = 
+            MapEntityModelFull(postObject, objListFiles);
 
         _Context.AdminPosts.Add(adminPostEntity);
 
         int result = await _Context.SaveChangesAsync();
 
         return result > 0;
-    }    
+    }
 
+    public async Task<bool> UpdateAdminPost ( 
+        AdminPostDataModel objPostDm )
+    {
+        var postEntity = await _Context.AdminPosts.SingleAsync
+                           (a => a.AdminPostID == objPostDm.AdminPostID);
 
-    public AdminPost MapEntityModelFull
+        if ( postEntity == null )
+        {
+            return false; 
+        }
+
+        postEntity.ModifyBaseData ( objPostDm.ModelBase );
+        postEntity.UserID = objPostDm.UserID;
+        postEntity.User = null;
+
+        List<AdminImageFile> images = new List<AdminImageFile>();
+
+        images.AddRange ( MapAdmiFileDataModelToAdminFileEntity ( objPostDm ) );
+
+        objPostDm.ListAdminPostFileImages.ForEach ( fileVM =>
+        {
+            var objFile = 
+                    new AdminImageFile(fileVM.ImageFileContent);
+            objFile.AdminPostID = objPostDm.AdminPostID;
+            images.Add ( objFile );
+        } );
+
+        
+        List<AdminPostComment> comments = 
+            new List<AdminPostComment>();
+
+        objPostDm.ListAdminPostComments.ForEach ( commentDM =>
+        {
+            var objComment = new AdminPostComment();
+            objComment.AdminPostID = objPostDm.AdminPostID;
+            objComment.Comment = commentDM.Comment;
+            comments.Add ( objComment );
+        } );
+
+        postEntity.PosterName = objPostDm.PosterName;
+        postEntity.Title = objPostDm.PostTitle;
+        postEntity.PosterContactNumber = objPostDm.PosterContactNumber;
+        postEntity.WebsiteUrl = objPostDm.WebsiteUrl;
+        postEntity.ShortNote = objPostDm.ShortNote;
+        postEntity.SearchTag = objPostDm.SearchTag;
+        postEntity.PostType = ( EnumPostType ) objPostDm.PostTypeID;
+        postEntity.ListAdminPostComments = comments;
+        postEntity.ListAdminImageFiles = images;
+        postEntity.AdminPostID = objPostDm.AdminPostID;
+
+        _Context.AdminPosts.Update ( postEntity );
+
+        var result = await _Context.SaveChangesAsync();
+
+        return result > 0;
+    }
+
+    private AdminPost MapEntityModelFull
     ( 
         AdminPostDataModel from,
         List<AdminImageFileDataModel> fromListImages                 

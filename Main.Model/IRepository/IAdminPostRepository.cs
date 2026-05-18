@@ -17,8 +17,7 @@ public interface IAdminPostRepository
 
     Task<bool> SaveChanges ( );
 
-    AdminPost MapEntityModelFull ( AdminPostDataModel from,
-        List<AdminImageFileDataModel> fromListImages);
-
+    Task<bool> UpdateAdminPost (
+        AdminPostDataModel objPostDm );
 }
 
