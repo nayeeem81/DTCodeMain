@@ -12,9 +12,7 @@ using System.Web.Mvc;
 using WebApp.Infrastructure;
 using WebApp.ViewModel;
 
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace WebApp.Controller;
+namespace FineArtsWebApp;
 
 public class AuthController : BaseController
 {
@@ -46,7 +44,7 @@ public class AuthController : BaseController
         _userContext = userContext;
     }
 
-    public ActionResult Signup()
+    public IActionResult Signup()
     {
         var objModel = new AccountViewModel();
         objModel.PageName = "Registration Page";
@@ -55,130 +53,101 @@ public class AuthController : BaseController
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> SignUp( AccountViewModel model)
+    public async Task<IActionResult> SignUp(AccountViewModel model)
     {
+        bool result = false;
+
         var userIdentity = new IdentityUser
         {
             Email = model.Email,
             PhoneNumber = model.Phone,
             NormalizedUserName = model.Email.ToUpper(),
-            UserName = StringRelated.GetUserNameFromEmail(model.Email)
+            UserName = 
+            StringRelated.GetUserNameFromEmail(model.Email)
         };
 
-        var result = await _userManager
-                         .CreateAsync(userIdentity, model.Password);
+        UserAccountDataModel modelData = new UserAccountDataModel();
+        modelData.Email = model.Email;
+        modelData.UserName = model.Email;
 
-        if ( result.Succeeded )
+        var resultreateIdentity = 
+            await _userManager
+            .CreateAsync(userIdentity, model.Password);
+
+        if ( resultreateIdentity.Succeeded )
         {
-            int userId = await 
-                    _userAccountService
-                    .CreateUserAccount ( model.Email,
-                           _userContext
-                    );
+            var userSame = 
+                await _userManager.FindByIdAsync(model.Email);
 
-            if ( userId == 0 )
+            if ( userSame != null )
             {
-                var user = await _userManager.FindByIdAsync(model.Email);
+                result =
+                    await _userAccountService
+                          .CreateUserAccount ( userSame.Id,modelData );
+            }
+
+            if ( !result )
+            {
+                var user = 
+                    await _userManager
+                    .FindByIdAsync (model.Email);
 
                 if ( user != null )
                 {
-                    result = await _userManager.DeleteAsync(user);
-                    
-                }
-
-
-                if ( result.Succeeded )
-                {
-                    return RedirectToAction ( "Index" ); 
+                    var resultDelete = await _userManager
+                            .DeleteAsync(user);
                 }
             }
         }
         
         await _userManager.AddToRoleAsync(userIdentity, "User"); 
       
-        
-        if (result.Succeeded)
-        {
-            // Visitor User (DeshiEntityContext of Applicaton)
-            User objUserEntity = new User(userIdentity.Id, userIdentity.Email, userIdentity.UserName,
-                                        StaticAppSettings.Country, StaticAppSettings.CompanyName);
-
-            
-            bool res = await _userService.AddUser(objUserEntity);
-            
-
-            return RedirectToAction("Login");
-        }
-
-        return BadRequest(result.Errors);        
+        return RedirectToAction("Login");    
     }
 
-    public ActionResult Login()
+    public IActionResult Login()
     {
         var objModel = new AccountViewModel();
         objModel.PageName = "Login";
+
         return View(objModel);
     }
-
-    [HttpPost]
-    public async Task<IActionResult> Login ( LoginViewModel model )
-    {
-        // 1. Authenticate user against your database here...
-
-        // 2. Create claims from database values
-        var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier, "12345"), // DB UserId
-            new Claim("IdentityId", "auth0|abc987"),
-            new Claim("Company", "AcmeCorp"),
-            new Claim("Currency", "BDT"),
-            new Claim("Country", "BD")
-        };
-
-        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-        // 3. Sign the user in. The UserContext class can now read these instantly.
-        await HttpContext.SignInAsync ( CookieAuthenticationDefaults.AuthenticationScheme,new ClaimsPrincipal ( claimsIdentity ) );
-
-        return RedirectToAction ( "Index","Home" );
-    }
-}
     
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(AccountViewModel model)
     {
-        var userIdentity = await _userManager.FindByEmailAsync(model.Email);
+        var userIdentity = 
+            await _userManager
+                  .FindByEmailAsync(model.Email);
 
         if (userIdentity == null)
         {
             return BadRequest("Invalid credentials");
         }
 
-
-        var resultSignIn = await _signInManager.PasswordSignInAsync(
-            userIdentity, model.Password, true, lockoutOnFailure: false);
-
+        var resultSignIn = await 
+                        _signInManager
+                        .PasswordSignInAsync(
+                                userIdentity, 
+                                model.Password, 
+                                true, 
+                                lockoutOnFailure: false);
 
         if (resultSignIn.Succeeded)
         {
-            //UserID i the Application to use.
-            int userID = await _userService.GetSingleUser(userIdentity.Id);
+            int userID = await _userAccountService.GetSingleUser(userIdentity.Id);
 
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, 
+                userID.ToString())
+            };
 
-            //User Session (UserID)
-            UserModel userModel = new UserModel(userID);
-            SetSessionUser(userModel);
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-            
-            //Model Base
-            _modelBaseService.SetUpModelBase(StaticAppSettings.CompanyName, StaticAppSettings.Country, userID);
-            
-            ModelBase modelBaseCreate = _modelBaseService.CreateEntity();
-            ModelBase modelBaseUpdate = _modelBaseService.UpdateEntity();
-
-            SetModelBaseSession(modelBaseCreate, modelBaseUpdate);
-            //Model Base End
+            await HttpContext.SignInAsync ( CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal ( claimsIdentity ) );
 
             return RedirectToAction("Index", "Home");
         }
@@ -190,7 +159,6 @@ public class AuthController : BaseController
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
-        // Clear the user's authentication cookie
         await _signInManager.SignOutAsync();
        
         ClearSessionUser();
@@ -206,7 +174,11 @@ public class AuthController : BaseController
     {
         if (User.Identity.IsAuthenticated)
         {
-            var objModel = new AccountViewModel() { PageName = "Reset Password" };
+            var objModel = new AccountViewModel() 
+            { 
+                PageName = "Reset Password" 
+            };
+
             return View(objModel);
         }
 
@@ -215,9 +187,12 @@ public class AuthController : BaseController
 
     [HttpPost]
     [Authorize(Roles = "Admin,User,Company")]
-    public async Task<ActionResult> ResetPassword(AccountViewModel accountViewModel)  
+    public async Task<ActionResult> ResetPassword(
+        AccountViewModel accountViewModel)  
     {
-        var isValid = ValidationService.IsValidEmail(accountViewModel.Email);
+        var isValid = ValidationService
+            .IsValidEmail(accountViewModel.Email);
+        
         _logger.LogInformation("Password reset attempt for email: {Email}, Valid Email: {IsValid}", accountViewModel.Email, isValid);
         
         if(!isValid)

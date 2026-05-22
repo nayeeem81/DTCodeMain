@@ -1,7 +1,5 @@
 ﻿using Main.Common;
 using Main.Common.Enums;
-using Main.Common.Settings;
-
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebApp.ViewModel;

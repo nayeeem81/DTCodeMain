@@ -1,7 +1,8 @@
-﻿namespace Main.Services
+﻿namespace Main.Services;
+
+public interface IAccountCommandService
 {
-    public interface IAccountCommandService
-    {
-        Task<bool> CreateUserAccount(string email);
-    }
+    Task<bool> CreateUserAccount ( 
+        string idetytyId, UserAccountDataModel userAccountDM );
+    Task<int> GetSingleUser ( string id );
 }

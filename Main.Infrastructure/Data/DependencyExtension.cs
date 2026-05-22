@@ -43,17 +43,18 @@ public static class DependencyInjection
         .AddEntityFrameworkStores<ApplicationDbContext> ( )
         .AddDefaultTokenProviders( ) ;
 
-      services.AddScoped<IAdminPostImageRepository,AdminPostImageRepository> ( );
-      services.AddScoped<IAdminPostRepository,AdminPostRepository> ( );
-      services.AddScoped<IProductImageRepository,ProductImageRepository> ( );
-        
-        services.AddScoped<IProductRepository,ProductRepository> ( );
-
-        services.AddScoped<IPageRepository,PageRepository> ( );
-
-        services.AddScoped<IDatabaseSeeder, DatabaseSeeder> ( );
-
         services.AddScoped<DbInitializer> ( );
+        services.AddScoped<IDatabaseSeeder,DatabaseSeeder> ( );
+
+        services.AddScoped<IUserRepository,UserRepository> ( );
+        services.AddScoped<IAdminPostImageRepository,AdminPostImageRepository> ( );
+        services.AddScoped<IAdminPostRepository,AdminPostRepository> ( );
+        services.AddScoped<IProductImageRepository,ProductImageRepository> ( );
+        services.AddScoped<IProductRepository,ProductRepository> ( );
+        services.AddScoped<IPageRepository,PageRepository> ( );
+        
+
+        
 
         return services;
 

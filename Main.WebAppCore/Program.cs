@@ -1,5 +1,4 @@
 using Infrastructure.Localization;
-using Main.Common.Settings;
 using Main.Infrastructure;
 using Main.Services;
 using WebApp.Infrastructure;

@@ -1,4 +1,6 @@
-﻿namespace Main.Services;
+﻿using Main.Common.Enums;
+
+namespace Main.Services;
 
 public interface IUserContext
 {
@@ -6,27 +8,37 @@ public interface IUserContext
     {
         get;
     }
+
     string IdentityId
     {
         get;
     }
-    string Company
+
+    EnumCompanyName EnumCompanyName
     {
         get;
     }
-    string Currency
+
+    EnumCurrency EnumCurrency
     {
         get;
     }
-    string Country
+
+    EnumCountry EnumCountry
     {
         get;
     }
-    
-    string AppEnvironment
+
+    EnumCategoryFor EnumCategoryFor
     {
         get;
     }
-    
+
+    int SeedUserId
+    {
+        get;
+    }
+
+
     DateTime GetLocalNow ( );
 }

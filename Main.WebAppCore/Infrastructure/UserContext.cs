@@ -1,4 +1,5 @@
-﻿using Main.Services;
+﻿using Main.Common.Enums;
+using Main.Services;
 using System.Security.Claims;
 
 namespace WebApp.Infrastructure;
@@ -6,39 +7,39 @@ namespace WebApp.Infrastructure;
 public class UserContext: IUserContext
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IConfiguration _configuration;
 
-    public UserContext ( IHttpContextAccessor httpContextAccessor,IConfiguration configuration )
+    public UserContext ( IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
-        _configuration = configuration;
     }
     
     private ClaimsPrincipal? User => _httpContextAccessor.HttpContext?.User;
 
     
-    public string UserId => User?.FindFirst ( ClaimTypes.NameIdentifier )?.Value ?? "System";
+    //Current User
+    public string UserId => User?.FindFirst ( ClaimTypes.NameIdentifier )?.Value ?? string.Empty;
 
     public string IdentityId => User?.FindFirst ( "IdentityId" )?.Value ?? string.Empty;
 
-    public string Company => User?.FindFirst ( "Company" )?.Value ?? string.Empty;
 
-    public string Currency => User?.FindFirst ( "Currency" )?.Value ?? string.Empty;
 
-    public string Country => User?.FindFirst ( "Country" )?.Value ?? string.Empty;
+    //Configuration file
+    public EnumCategoryFor EnumCategoryFor => ( EnumCategoryFor ) AppSettings.Current.EnumCategoryFor;
 
-    public string AppEnvironment => _configuration["EnvironmentSettings:Name"] ?? "Production";
+    public EnumCompanyName EnumCompanyName => ( EnumCompanyName ) AppSettings.Current.EnumCompanyName;
+
+    public EnumCurrency EnumCurrency => ( EnumCurrency ) AppSettings.Current.EnumCurrency;
+
+    public EnumCountry EnumCountry => ( EnumCountry ) AppSettings.Current.EnumCountry;
+
+    public int SeedUserId => ( int ) AppSettings.Current.SeedUserId;
 
     public DateTime GetLocalNow ( )
     {
-        string timeZoneId = Country switch
-        {
-            "BD" => "Bangladesh Standard Time",
-            "US" => "Eastern Standard Time",
-            _ => "UTC" 
-        };
+        string timeZoneId = "Bangladesh Standard Time";
 
         TimeZoneInfo userTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+
         return TimeZoneInfo.ConvertTimeFromUtc ( DateTime.UtcNow,userTimeZone );
     }
 }

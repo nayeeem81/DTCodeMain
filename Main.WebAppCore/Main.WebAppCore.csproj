@@ -17,6 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\AccountController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ContainerPort Include="8080" />
   </ItemGroup>
 
@@ -28,6 +32,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Main.Common\Main.Common.csproj" />
     <ProjectReference Include="..\Main.Infrastructure\Main.Infrastructure.csproj" />
+    <ProjectReference Include="..\Main.Services\Main.Services.csproj" />
     <ProjectReference Include="..\ResourceLibrary\ResourceLibrary.csproj" />
   </ItemGroup>
 
