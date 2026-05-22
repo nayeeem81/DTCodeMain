@@ -1,7 +1,7 @@
 ﻿using BusinessModel;
 using Main.Common.Enums;
 
-namespace Main.Services.IServices;
+namespace IServices;
 
 public interface IQueryPageService
 {

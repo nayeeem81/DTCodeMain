@@ -1,9 +1,8 @@
-﻿using IService;
+﻿using IServices;
 using IRepository;
 using BusinessModel;
-using Main.Services.IServices;
 
-namespace Main.Service;
+namespace Services.Query;
 
 public class AdminPostQueryService: IQueryAdminPostService
 {

@@ -1,9 +1,9 @@
 ﻿using BusinessModel;
-using IRepository;              
+using IServices;
+using IRepository;
 using Main.Common.Enums;
-using Main.Services.IServices;
 
-namespace Main.Service;
+namespace Services.Query;
 
 public class PagePanelQueryService: IQueryPagePanelService
 {

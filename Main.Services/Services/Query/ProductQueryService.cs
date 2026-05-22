@@ -1,8 +1,8 @@
 ﻿using BusinessModel;
 using IRepository;
-using Main.Services.IServices;
+using IServices;
 
-namespace Main.Service;
+namespace Services.Query;
 
 public class ProductQueryService : IQueryProductService
 {

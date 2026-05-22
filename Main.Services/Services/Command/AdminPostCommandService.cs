@@ -2,7 +2,7 @@
 using IRepository;
 using BusinessModel;
 
-namespace Main.Service;
+namespace Services.Command;
 
 public class AdminPostDataService: ICommandAdminPostService
 {

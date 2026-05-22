@@ -1,10 +1,10 @@
 ﻿using BusinessModel;
 using IRepository;
-using IService;                   
+using IService;
 using Main.Common.Enums;
 using Main.Common.Model;
 
-namespace Main.Service;
+namespace Services.Command;
 
 public class PagePanelCommandService: ICommandPagePanelService
 {

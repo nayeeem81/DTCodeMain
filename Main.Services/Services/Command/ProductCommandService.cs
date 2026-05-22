@@ -2,7 +2,7 @@
 using IRepository;
 using IService;
 
-namespace Main.Service;
+namespace Services.Command;
 
 public class ProductDataService : ICommandProductService
 {

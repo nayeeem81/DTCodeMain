@@ -1,6 +1,6 @@
 ﻿using BusinessModel;
 
-namespace Main.Services.IServices;
+namespace IServices;
 
 public interface IQueryProductService
 {
