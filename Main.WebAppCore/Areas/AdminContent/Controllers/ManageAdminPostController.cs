@@ -13,36 +13,36 @@ namespace FineArtsWebApp;
 [Authorize(Roles = "Admin")]
 public class ManageAdminPostController : BaseController
 {
-    private readonly ICommandAdminPostService _AdminPostDataService;
+    private readonly ICommandAdminPostService _adminPostDataService;
 
     private readonly IMemoryCache _cache;
 
-    private readonly IUserContext _UserContext;
+    private readonly IUserContext _userContext;
 
-    private readonly ILogger<ManageAdminPostController> _Logger;
+    private readonly ILogger<ManageAdminPostController> _logger;
 
     public ManageAdminPostController( ICommandAdminPostService adminPostDataService,
         IMemoryCache cache, 
         ILogger<ManageAdminPostController> logger,
         IUserContext userContext)
     {
-        _AdminPostDataService = adminPostDataService;
+        _adminPostDataService = adminPostDataService;
 
         _cache = cache;
 
-        _Logger = logger;
+        _logger = logger;
 
-        _UserContext = userContext;
+        _userContext = userContext;
     }
 
-    private void SetImageInDataModel(AdminPostDataModel objPostDm)
+    private void SetImageInDataModel(AdminPostDataModel postDataModel)
     {
         List<AdminImageFileDataModel> objFileList 
             = new List<AdminImageFileDataModel>();
 
         objFileList = GetSessionNewAdminPostImage();
 
-        objPostDm.ListAdminPostFileImages = objFileList;
+        postDataModel.ListAdminPostFileImages = objFileList;
 
         ClearNewAdminPostImageSessions();
     }
@@ -53,7 +53,7 @@ public class ManageAdminPostController : BaseController
     {
         try
         {
-            var listAdminPosts = await _AdminPostDataService.GetAllAdminPosts();
+            var listAdminPosts = await _adminPostDataService.GetAllAdminPosts();
 
             var objManageAdminPostViewModel = new ManageAdminPostViewModel();
 
@@ -106,7 +106,7 @@ public class ManageAdminPostController : BaseController
 
             SetImageInDataModel ( postDataModel );
 
-            var result = await _AdminPostDataService.SaveNewAdminPost(postDataModel);
+            var result = await _adminPostDataService.SaveNewAdminPost(postDataModel);
 
             string? urlGo = Url.Action("Index", "ManageAdminPost", new { Area = "AdminContent" });
 
@@ -127,7 +127,7 @@ public class ManageAdminPostController : BaseController
             = collection.AdminPostID;
 
         postDataModel.UserID 
-            = Convert.ToInt32 ( _UserContext.UserId );
+            = Convert.ToInt32 ( _userContext.UserId );
 
         postDataModel.PostTitle = collection.PostTitle;
         postDataModel.PosterName = collection.PosterName;
@@ -135,12 +135,12 @@ public class ManageAdminPostController : BaseController
         postDataModel.PosterContactNumber 
             = collection.PosterContactNumber;
 
-        postDataModel.Currency = _UserContext.EnumCurrency;
+        postDataModel.Currency = _userContext.EnumCurrency;
 
-        postDataModel.HostCountry = _UserContext.EnumCountry;
+        postDataModel.HostCountry = _userContext.EnumCountry;
         
         postDataModel.HostCompanyName 
-            = _UserContext.EnumCompanyName;
+            = _userContext.EnumCompanyName;
 
         return postDataModel;
     }
@@ -156,7 +156,7 @@ public class ManageAdminPostController : BaseController
             var objAdminPostViewModel = new AdminPostViewModel();
 
             objAdminPostViewModel = 
-               await _AdminPostDataService
+               await _adminPostDataService
                      .GetAdminPostForEditPostID(id);
             
             objAdminPostViewModel.PageName 
@@ -190,7 +190,7 @@ public class ManageAdminPostController : BaseController
 
             collection.UserID = GetSessionUserId();
 
-            bool result = await _AdminPostDataService.UpdateAdminPost(collection);
+            bool result = await _adminPostDataService.UpdateAdminPost(collection);
 
             string? urlGo = Url.Action("Index", "ManageAdminPost", new { Area = "AdminContent" });
 
@@ -208,7 +208,7 @@ public class ManageAdminPostController : BaseController
     {
         try
         {
-            var objAdminPostViewModel = await _AdminPostDataService.GetAdminPostForEditPostID(id);
+            var objAdminPostViewModel = await _adminPostDataService.GetAdminPostForEditPostID(id);
 
             objAdminPostViewModel.EnumAdminPostTypeDescription = DropDownSelectListItem.GetPostTypeList().Where(pt => pt.Value == objAdminPostViewModel.PostTypeID.ToString()).Select(pt => pt.Text).FirstOrDefault();
 
@@ -294,7 +294,7 @@ public class ManageAdminPostController : BaseController
     {
         try
         {
-            bool result = await _AdminPostDataService.DeleteAdminPostImage(id, postId);
+            bool result = await _adminPostDataService.DeleteAdminPostImage(id, postId);
 
             if (!result)
             {
@@ -315,7 +315,7 @@ public class ManageAdminPostController : BaseController
     {
         try
         {
-            var objAdminPostViewModel = await _AdminPostDataService.GetAdminPostForEditPostID(id);
+            var objAdminPostViewModel = await _adminPostDataService.GetAdminPostForEditPostID(id);
 
             return View(objAdminPostViewModel);
         }
@@ -333,7 +333,7 @@ public class ManageAdminPostController : BaseController
 
         try
         {
-            var result = await _AdminPostDataService.DeleteAdminPost(id);
+            var result = await _adminPostDataService.DeleteAdminPost(id);
 
             if (result)
             {
@@ -341,7 +341,7 @@ public class ManageAdminPostController : BaseController
             }  
             else
             {
-                objAdminPostViewModel = await _AdminPostDataService.GetAdminPostForEditPostID(id);
+                objAdminPostViewModel = await _adminPostDataService.GetAdminPostForEditPostID(id);
 
                 return View(objAdminPostViewModel);
             }
