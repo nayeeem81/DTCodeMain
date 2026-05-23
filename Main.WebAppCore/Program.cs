@@ -1,5 +1,4 @@
 using Infrastructure.Localization;
-using Main.Infrastructure;
 using Main.Services;
 using WebApp.Infrastructure;
 
@@ -16,7 +15,7 @@ AppSettings.Current =
 
 builder.Services.AddCustomLocalization ( );
 
-builder.Services.AddInfrastructureServices( builder.Configuration );
+builder.Services.AddServiceDependencies ( builder.Configuration );
 
 builder.Services.AddControllersWithViews ( );
 

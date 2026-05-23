@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-
 namespace Data;
 
 public interface IDatabaseSeeder

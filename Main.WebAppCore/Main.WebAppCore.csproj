@@ -51,7 +51,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Main.Common\Main.Common.csproj" />
-    <ProjectReference Include="..\Main.Infrastructure\Main.Infrastructure.csproj" />
     <ProjectReference Include="..\Main.Services\Main.Services.csproj" />
     <ProjectReference Include="..\ResourceLibrary\ResourceLibrary.csproj" />
   </ItemGroup>

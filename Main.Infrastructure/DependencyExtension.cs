@@ -15,6 +15,7 @@ public static class DependencyInjection
 
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
+        // Identity Context (User & Role)
         services.AddDbContext<ApplicationDbContext> ( options =>
         {
             options.UseSqlServer ( connectionString,b => b.MigrationsAssembly ( typeof ( ApplicationDbContext ).Assembly.FullName ) );
@@ -41,24 +42,32 @@ public static class DependencyInjection
             options.User.RequireUniqueEmail = true;
         } )
         .AddEntityFrameworkStores<ApplicationDbContext> ( )
-        .AddDefaultTokenProviders( ) ;
+        .AddDefaultTokenProviders( ) ; //Identity Context End
 
+
+
+        //Business DB Context (Application)
+        services.AddDbContext<BussinessAppDbContext> ( options =>
+        {
+            options.UseSqlServer ( connectionString,
+                b => b.MigrationsAssembly
+                ( typeof ( BussinessAppDbContext ).Assembly.FullName )
+                );
+        } );
+        
+        //For console app
         services.AddScoped<DbInitializer> ( );
         services.AddScoped<IDatabaseSeeder,DatabaseSeeder> ( );
 
+
+
+        //Register Repository
         services.AddScoped<IUserRepository,UserRepository> ( );
         services.AddScoped<IAdminPostImageRepository,AdminPostImageRepository> ( );
         services.AddScoped<IAdminPostRepository,AdminPostRepository> ( );
         services.AddScoped<IProductImageRepository,ProductImageRepository> ( );
         services.AddScoped<IProductRepository,ProductRepository> ( );
         services.AddScoped<IPageRepository,PageRepository> ( );
-
-
-        services.AddScoped<IQueryAdminPostService,AdminPostDataService> ( );
-        services.AddScoped<ICommandAdminPostService,AdminPostDataService> ( );
-
-
-
 
         return services;
 
