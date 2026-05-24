@@ -8,13 +8,13 @@ public class BaseDataModel
         {
         }
 
-        public string? PageName { get; set; } = string.Empty;
+        public string PageName { get; set; } 
 
-        public EnumCurrency? Currency { get; set; }
+        public EnumCurrency Currency { get; set; }
        
-        public EnumCompanyName? HostCompanyName { get; set; }
+        public EnumCompanyName HostCompanyName { get; set; }
        
-        public EnumCountry? HostCountry { get; set; }
+        public EnumCountry HostCountry { get; set; }
 
         public DateTime CreatedDate { get; set; }
 

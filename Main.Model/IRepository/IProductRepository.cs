@@ -14,7 +14,7 @@ public interface IProductRepository
 
     Task<Product> GetProductByProductID(int productId);
 
-    Task<bool> SaveNewProduct(Product productObject, List<ProductImageFile> objListFiles);
+    Task<bool> SaveNewProduct ( Product productEntity );
 
-    Task<bool> UpdateProduct ( Product objPostDM );
+    Task<bool> UpdateProduct ( Product productEntity );
 }
