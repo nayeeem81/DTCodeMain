@@ -1,15 +1,23 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DataTransferModel;
+
 using Domain.Model;
+
 using IRepository;
+
 using Main.Common.HelperRelated;
+
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Main.Services;
 
 public class AccountService : IAccountService
 {
-    private readonly IUserContext _userContext;
+
     private readonly IUserRepository _userRepository;
+
     private readonly UserManager<IdentityUser> _userManager;
+
     private readonly SignInManager<IdentityUser> _signInManager;
 
     public AccountService ( 
@@ -19,9 +27,10 @@ public class AccountService : IAccountService
         SignInManager<IdentityUser> signInManager
         )
     {
-        _userContext = userContext;
         _userRepository = userRepository;
+
         _userManager = userManager;
+
         _signInManager = signInManager;
     }
 
@@ -44,11 +53,53 @@ public class AccountService : IAccountService
         return false;
     }
 
-    public async Task<int> GetSingleUser ( string id )
+    public async Task<int> GetSingleUser ( string email )
     {
-        User userEntity  = await _userRepository.GetSingleUserByIdentityID ( id );
+        User userEntity  = await _userRepository.GetSingleUser ( email );
 
         return userEntity.UserID;
+    }
+
+    public async Task<IdentityUser?> GetIdentityUser ( string email )
+    {
+        IdentityUser? identityUser  
+            = await _userManager.FindByEmailAsync ( email );
+
+        return identityUser;
+    }
+
+    public async Task<bool> AuthenticateUser ( string email, string password )
+    {
+        var userIdentity =
+            await _userManager
+                  .FindByEmailAsync(email);
+
+        if ( userIdentity == null )
+        {
+            return false;
+        }
+
+        var result = await
+                     _signInManager.PasswordSignInAsync
+                     (userIdentity, password, true, lockoutOnFailure: false);
+        
+        return result.Succeeded;
+    }
+
+    public async Task<bool> ChangePasswordAsync (
+        string email,string password,string rePassword )
+    {
+        IdentityUser? identityUser = await GetIdentityUser ( email );
+
+        if ( identityUser == null )
+        {
+            return false;
+        }
+
+        var result = await _userManager
+            .ChangePasswordAsync(identityUser, password, rePassword);
+
+        return result.Succeeded;
     }
 
 #region Priate Methods (CreateUser, CreateIdentityUser, CreateAppicationUser, RemoveIdentityUser)
@@ -58,8 +109,11 @@ public class AccountService : IAccountService
         var userIdentity = new IdentityUser
         {
             Email = userAccountDataModel.Email,
+
             PhoneNumber = userAccountDataModel.PhoneNumber,
+
             NormalizedUserName = userAccountDataModel.Email.ToUpper(),
+
             UserName = userAccountDataModel.UserName
         };
 
@@ -72,7 +126,9 @@ public class AccountService : IAccountService
         User objUserEntity = new User();
 
         objUserEntity.IdentityUserID = idetytyId;
+
         objUserEntity.Email = userAccountDataModel.Email;
+
         objUserEntity.ClientName = 
             StringRelated.GetUserNameFromEmail ( userAccountDataModel.Email );
 
@@ -97,7 +153,7 @@ public class AccountService : IAccountService
                 await _userRepository
                       .AddUser ( userEntity );
             
-            // if Not Success (Reverce)
+            
             await RemoveIdentityUser
                 ( !success,userAccountDataModel.Email );
 
@@ -130,7 +186,46 @@ public class AccountService : IAccountService
         }
     }
 
-#endregion
+    public async Task<bool> UnlockUser ( string userId )
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        
+        if ( user == null )
+        {
+            return false;
+        }
+        
+        var lockoutResult = await _userManager.SetLockoutEndDateAsync(user, null);
 
-    
+        if ( !lockoutResult.Succeeded )
+        {
+            return false;
+        }
+        
+        var resetResult = await _userManager.ResetAccessFailedCountAsync(user);
+
+        if ( !resetResult.Succeeded )
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public async Task<List<IdentityUserDataModel>?> Users ( )
+    {
+        List<IdentityUser> identityUsers = await _userManager.Users.ToListAsync<IdentityUser>();
+
+        List<IdentityUserDataModel> identityUserDataModel = identityUsers.Select(u => new IdentityUserDataModel
+        {
+            UserId = u.Id,
+            UserName = u.UserName,
+            LockoutEnd = u.LockoutEnd
+        }).ToList<IdentityUserDataModel>();
+
+        return identityUserDataModel;  
+    }
+
+    #endregion
 }
+
